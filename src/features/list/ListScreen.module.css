@@ -69,8 +69,7 @@
   background: var(--surface-2);
 }
 
-.rowEmoji {
-  font-size: 22px;
+.rowIcon {
   flex-shrink: 0;
   width: 34px;
   height: 34px;
@@ -79,6 +78,7 @@
   justify-content: center;
   background: var(--surface-2);
   border-radius: var(--r-full);
+  color: var(--ink-2);
 }
 
 .rowMain {

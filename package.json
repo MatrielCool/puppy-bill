@@ -9,6 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "icons": "node scripts/gen-icons.mjs",
+    "icons:preview": "node scripts/preview-icons.mjs",
     "test": "vitest run"
   },
   "dependencies": {

@@ -26,7 +26,10 @@ export interface TransactionRow {
 export interface CategoryRow {
   id: CategoryId;
   name: string;
-  emoji: string;
+  /** 图标名，对应 ui/iconPaths.mjs 里的键。schema v2 起取代 emoji */
+  icon: string;
+  /** @deprecated v1 遗留字段，仅为兼容旧备份保留，界面不再使用 */
+  emoji?: string;
   kind: TxKind;
   sortOrder: number;
   /** IndexedDB 无法索引 boolean，所以用 0|1 */

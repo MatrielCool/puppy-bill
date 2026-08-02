@@ -10,6 +10,7 @@ import {
 } from '../src/db/mutations';
 import { getSummary, listMonth } from '../src/db/queries';
 import { todayKey } from '../src/lib/dates';
+import { ICON_PATHS } from '../src/ui/iconPaths.mjs';
 
 beforeEach(async () => {
   await db.transactions.clear();
@@ -21,6 +22,15 @@ describe('内置分类种子', () => {
   it('首次启动写入分类', async () => {
     await seedIfEmpty();
     expect(await db.categories.count()).toBeGreaterThan(10);
+  });
+
+  it('每个内置分类都有能渲染的图标 —— 界面上不会出现空白格子', async () => {
+    await seedIfEmpty();
+    const categories = await db.categories.toArray();
+    for (const c of categories) {
+      expect(c.icon, `分类「${c.name}」缺图标`).toBeTruthy();
+      expect(ICON_PATHS, `图标「${c.icon}」在图标集里不存在`).toHaveProperty(c.icon);
+    }
   });
 
   it('重复调用不会写重复数据', async () => {

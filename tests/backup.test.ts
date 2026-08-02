@@ -144,6 +144,43 @@ describe('导入校验拦截坏文件', () => {
     expect(() => parseBackup(JSON.stringify(truncated))).toThrow(/不完整|截断/);
   });
 
+  it('导入 v1 老备份时把 emoji 翻译成图标名', () => {
+    const v1 = {
+      ...valid(),
+      schemaVersion: 1,
+      counts: { transactions: 0, categories: 1, budgets: 0 },
+      data: {
+        ...valid().data,
+        categories: [
+          {
+            id: 'c_food', name: '餐饮', emoji: '🍜', kind: 'expense',
+            sortOrder: 0, isBuiltin: 1, isArchived: 0,
+          },
+        ],
+      },
+    };
+    const parsed = parseBackup(JSON.stringify(v1));
+    expect(parsed.data.categories[0].icon).toBe('food');
+  });
+
+  it('导入未知 emoji 的分类时退化为通用图标，不留空白', () => {
+    const v1 = {
+      ...valid(),
+      schemaVersion: 1,
+      counts: { transactions: 0, categories: 1, budgets: 0 },
+      data: {
+        ...valid().data,
+        categories: [
+          {
+            id: 'c_x', name: '自定义', emoji: '🦄', kind: 'expense',
+            sortOrder: 0, isBuiltin: 0, isArchived: 0,
+          },
+        ],
+      },
+    };
+    expect(parseBackup(JSON.stringify(v1)).data.categories[0].icon).toBe('other');
+  });
+
   it('拒绝金额为负或非整数的记录', () => {
     const bad = {
       ...valid(),

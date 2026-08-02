@@ -4,6 +4,12 @@
   height: 100%;
 }
 
+/* ── 顶部收支分段控件 ── */
+.topBar {
+  padding: 10px 16px 2px;
+  flex-shrink: 0;
+}
+
 /* ── 顶部汇总条 ── */
 .summary {
   display: flex;
@@ -119,9 +125,13 @@
   transform: scale(1.04);
 }
 
-.chipEmoji {
-  font-size: 22px;
-  line-height: 1;
+.chipIcon {
+  color: var(--ink-2);
+  transition: color 0.16s ease;
+}
+
+.chipOn .chipIcon {
+  color: var(--brand-ink);
 }
 
 .chipName {
@@ -144,8 +154,11 @@
   align-items: center;
 }
 
-.pill {
-  padding: 7px 14px;
+.datePill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 13px;
   border-radius: var(--r-full);
   background: var(--surface);
   border: 1.5px solid var(--border);
@@ -224,9 +237,10 @@
   border: 1.5px solid var(--border);
 }
 
-/* 完成键：跨两行、暖橙、右下角拇指最容易够到的位置 */
+/* 完成键：收支切换移到顶部后腾出了位置，这里跨三行，
+   成为整个键盘上最大、右拇指最容易够到的目标 */
 .keyDone {
-  grid-row: span 2;
+  grid-row: span 3;
   background: var(--brand);
   color: #fff;
   font-size: 18px;
@@ -238,24 +252,12 @@
   background: var(--brand-strong);
 }
 
+.keyDoneIncome {
+  background: var(--ok);
+}
+
 .keyDone:disabled {
   background: var(--border);
   color: var(--ink-3);
   box-shadow: none;
-}
-
-.kindKey {
-  font-size: 15px;
-  font-weight: 700;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.kindExpense {
-  color: var(--ink);
-}
-
-.kindIncome {
-  color: var(--ok);
-  background: color-mix(in srgb, var(--ok) 12%, var(--surface));
 }

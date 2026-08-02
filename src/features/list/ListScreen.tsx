@@ -7,6 +7,7 @@ import { formatCNY, formatCNYGrouped } from '../../lib/money';
 import { currentMonthKey, formatDayHeader, formatMonthLabel } from '../../lib/dates';
 import type { TransactionRow } from '../../db/types';
 import type { ToastData } from '../../ui/Toast';
+import { Icon, type IconName } from '../../ui/Icon';
 import styles from './ListScreen.module.css';
 
 /**
@@ -68,7 +69,7 @@ export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void })
             src={`${import.meta.env.BASE_URL}pwa-192x192.png`}
             alt=""
           />
-          <p className={styles.emptyText}>这个月还没有账目，去「记一笔」写第一笔吧 🐾</p>
+          <p className={styles.emptyText}>这个月还没有账目，去「记一笔」写第一笔吧</p>
         </div>
       )}
 
@@ -86,7 +87,9 @@ export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void })
               const cat = catMap.get(row.categoryId);
               return (
                 <div key={row.id} className={styles.row}>
-                  <span className={styles.rowEmoji}>{cat?.emoji ?? '🐾'}</span>
+                  <span className={styles.rowIcon}>
+                    <Icon name={(cat?.icon ?? 'other') as IconName} size={20} />
+                  </span>
                   <span className={styles.rowMain}>
                     <span className={styles.rowName}>{cat?.name ?? '未知分类'}</span>
                     {row.note && <span className={styles.rowNote}>{row.note}</span>}

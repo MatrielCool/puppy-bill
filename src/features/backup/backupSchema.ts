@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SCHEMA_VERSION } from '../../db/db';
+import { EMOJI_TO_ICON, SCHEMA_VERSION } from '../../db/db';
 
 /**
  * 导入前的校验。财务数据值得为此付出这点体积 ——
@@ -20,15 +20,23 @@ const txSchema = z.object({
   deletedAt: z.number().nullable(),
 });
 
-const categorySchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  emoji: z.string(),
-  kind: z.enum(['expense', 'income']),
-  sortOrder: z.number(),
-  isBuiltin: z.union([z.literal(0), z.literal(1)]),
-  isArchived: z.union([z.literal(0), z.literal(1)]),
-});
+const categorySchema = z
+  .object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    // v1 的备份只有 emoji，v2 起用 icon。两者都设为可选，在下面的 transform 里补齐。
+    icon: z.string().optional(),
+    emoji: z.string().optional(),
+    kind: z.enum(['expense', 'income']),
+    sortOrder: z.number(),
+    isBuiltin: z.union([z.literal(0), z.literal(1)]),
+    isArchived: z.union([z.literal(0), z.literal(1)]),
+  })
+  .transform((row) => ({
+    ...row,
+    // 导入 v1 老备份时把 emoji 翻译成图标名，用户不会看到空白图标
+    icon: row.icon ?? (row.emoji ? (EMOJI_TO_ICON[row.emoji] ?? 'other') : 'other'),
+  }));
 
 const budgetSchema = z.object({
   id: z.string().min(1),

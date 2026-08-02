@@ -4,7 +4,10 @@ import clsx from 'clsx';
 import { getSummary, listCategoriesByFrequency } from '../../db/queries';
 import { addTransaction, softDeleteTransaction, restoreTransaction } from '../../db/mutations';
 import { formatCNY, formatCNYGrouped, parseInputToCents } from '../../lib/money';
-import { dateKeyOffset, formatDayHeader, todayKey } from '../../lib/dates';
+import { formatDayHeader, todayKey } from '../../lib/dates';
+import { Icon, type IconName } from '../../ui/Icon';
+import { KindSegmented } from '../../ui/Segmented';
+import { DatePicker } from '../../ui/DatePicker';
 import type { ToastData } from '../../ui/Toast';
 import { useKeypad } from './useKeypadReducer';
 import { SuccessBurst } from './SuccessBurst';
@@ -15,6 +18,7 @@ const DRAFT_KEY = 'puppy-bill:draft';
 export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void }) {
   const [state, dispatch] = useKeypad();
   const [burstKey, setBurstKey] = useState(0);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
   const noteRef = useRef<HTMLInputElement>(null);
 
   const categories = useLiveQuery(() => listCategoriesByFrequency(state.kind), [state.kind]);
@@ -29,7 +33,6 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
     if (!raw) return;
     try {
       const draft = JSON.parse(raw);
-      // 隔天的草稿没有意义，丢弃
       if (draft?.dateKey === todayKey() && typeof draft.input === 'string') {
         dispatch({ type: 'hydrate', state: draft });
       }
@@ -73,7 +76,7 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
 
     onToast({
       id: Date.now(),
-      text: `已记 ${category?.emoji ?? ''}${category?.name ?? ''} ${formatCNY(cents)}`,
+      text: `已记 ${category?.name ?? ''} ${formatCNY(cents)}`,
       actionLabel: '撤销',
       onAction: () => {
         void softDeleteTransaction(id);
@@ -87,16 +90,15 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
     });
   };
 
-  const dateLabel =
-    state.dateKey === todayKey()
-      ? '今天'
-      : state.dateKey === dateKeyOffset(-1)
-        ? '昨天'
-        : formatDayHeader(state.dateKey);
+  const isToday = state.dateKey === todayKey();
 
   return (
     <div className={styles.screen}>
       {burstKey > 0 && <SuccessBurst key={burstKey} />}
+
+      <div className={styles.topBar}>
+        <KindSegmented value={state.kind} onChange={(kind) => dispatch({ type: 'setKind', kind })} />
+      </div>
 
       <div className={styles.summary}>
         <span>今日</span>
@@ -106,7 +108,9 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
       </div>
 
       <div className={styles.amountRow}>
-        <span className={styles.currency}>{state.kind === 'income' ? '+¥' : '¥'}</span>
+        <span className={clsx(styles.currency, state.kind === 'income' && styles.amountIncome)}>
+          {state.kind === 'income' ? '+¥' : '¥'}
+        </span>
         <span
           className={clsx(
             styles.amount,
@@ -126,7 +130,7 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
             className={clsx(styles.chip, state.categoryId === c.id && styles.chipOn)}
             onClick={() => dispatch({ type: 'setCategory', categoryId: c.id })}
           >
-            <span className={styles.chipEmoji}>{c.emoji}</span>
+            <Icon name={c.icon as IconName} size={23} className={styles.chipIcon} />
             <span className={styles.chipName}>{c.name}</span>
           </button>
         ))}
@@ -134,15 +138,11 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
 
       <div className={styles.metaRow}>
         <button
-          className={clsx(styles.pill, state.dateKey !== todayKey() && styles.pillOn)}
-          onClick={() =>
-            dispatch({
-              type: 'setDate',
-              dateKey: state.dateKey === todayKey() ? dateKeyOffset(-1) : todayKey(),
-            })
-          }
+          className={clsx(styles.datePill, !isToday && styles.pillOn)}
+          onClick={() => setDatePickerOpen(true)}
         >
-          {dateLabel}
+          <Icon name="calendar" size={16} />
+          {isToday ? '今天' : formatDayHeader(state.dateKey)}
         </button>
         <input
           ref={noteRef}
@@ -164,40 +164,37 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
           onClick={() => dispatch({ type: 'backspace' })}
           aria-label="退格"
         >
-          ⌫
+          <Icon name="backspace" size={22} />
         </button>
 
         {['4', '5', '6'].map((d) => (
           <Key key={d} label={d} onPress={() => dispatch({ type: 'digit', value: d })} />
         ))}
+        {/* 收支切换移到顶部后，完成键得以跨三行，成为最容易按到的目标 */}
         <button
-          className={clsx(
-            styles.key,
-            styles.kindKey,
-            state.kind === 'income' ? styles.kindIncome : styles.kindExpense,
-          )}
-          onClick={() =>
-            dispatch({ type: 'setKind', kind: state.kind === 'expense' ? 'income' : 'expense' })
-          }
-        >
-          {state.kind === 'expense' ? '支出' : '收入'}
-        </button>
-
-        {['7', '8', '9'].map((d) => (
-          <Key key={d} label={d} onPress={() => dispatch({ type: 'digit', value: d })} />
-        ))}
-        <button
-          className={clsx(styles.key, styles.keyDone)}
+          className={clsx(styles.key, styles.keyDone, state.kind === 'income' && styles.keyDoneIncome)}
           disabled={!canSubmit}
           onClick={handleSubmit}
         >
           完成
         </button>
 
+        {['7', '8', '9'].map((d) => (
+          <Key key={d} label={d} onPress={() => dispatch({ type: 'digit', value: d })} />
+        ))}
+
         <Key label="." onPress={() => dispatch({ type: 'dot' })} />
         <Key label="0" onPress={() => dispatch({ type: 'digit', value: '0' })} />
         <Key label="00" onPress={() => dispatch({ type: 'digit', value: '0' })} double />
       </div>
+
+      {datePickerOpen && (
+        <DatePicker
+          value={state.dateKey}
+          onPick={(dateKey) => dispatch({ type: 'setDate', dateKey })}
+          onClose={() => setDatePickerOpen(false)}
+        />
+      )}
     </div>
   );
 }
@@ -216,8 +213,7 @@ function Key({
       className={styles.key}
       onClick={() => {
         onPress();
-        // "00" 键按两次 0
-        if (double) onPress();
+        if (double) onPress(); // "00" 键按两次 0
       }}
     >
       {label}

@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# 图标对照图，本地检查用（npm run icons:preview）
+scratch/
+
 # 图标由 scripts/icon.mjs 生成（npm run icons），源码是 SVG，不提交产物
 public/apple-touch-icon.png
 public/pwa-*.png

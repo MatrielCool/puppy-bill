@@ -16,7 +16,24 @@ import type {
  *   3. 主键**永不变更**
  *   4. SCHEMA_VERSION 会嵌进每个导出文件；导入时拒绝更新版本、正向迁移旧版本
  */
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
+
+/** v1 的 emoji → v2 的图标名。迁移和旧备份导入都用它。 */
+export const EMOJI_TO_ICON: Record<string, string> = {
+  '🍜': 'food',
+  '🚌': 'transit',
+  '🛍️': 'shopping',
+  '🏠': 'home',
+  '🎮': 'fun',
+  '💊': 'health',
+  '📚': 'study',
+  '🎁': 'social',
+  '🐶': 'pet',
+  '🐾': 'other',
+  '💰': 'salary',
+  '✨': 'bonus',
+  '🧧': 'redpacket',
+};
 
 export class PuppyDB extends Dexie {
   transactions!: Table<TransactionRow, TxId>;
@@ -43,8 +60,18 @@ export class PuppyDB extends Dexie {
       snapshots: 'id, at, reason',
     });
 
-    // 下一次改动的模板 —— 不要动上面的 version(1)：
-    // this.version(2).stores({ transactions: '…原有索引…, newIndex' })
+    // v2：分类改用自绘图标名取代 emoji。索引没变，只回填字段。
+    this.version(2).upgrade((tx) =>
+      tx
+        .table('categories')
+        .toCollection()
+        .modify((row: CategoryRow & { emoji?: string }) => {
+          row.icon ??= (row.emoji && EMOJI_TO_ICON[row.emoji]) || 'other';
+        }),
+    );
+
+    // 下一次改动的模板 —— 不要动上面已发布的 version 块：
+    // this.version(3).stores({ transactions: '…原有索引…, newIndex' })
     //   .upgrade(tx => tx.table('transactions').toCollection()
     //     .modify(row => { row.newField ??= 默认值; }));
   }

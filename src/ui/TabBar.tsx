@@ -1,11 +1,12 @@
 import { navigate, type Route } from '../lib/router';
+import { Icon, type IconName } from './Icon';
 import styles from './TabBar.module.css';
 
-const TABS: { route: Route; icon: string; label: string }[] = [
-  { route: '/', icon: '🐾', label: '记一笔' },
-  { route: '/list', icon: '📒', label: '账单' },
-  { route: '/budget', icon: '🎯', label: '预算' },
-  { route: '/settings', icon: '🐶', label: '我的' },
+const TABS: { route: Route; icon: IconName; label: string }[] = [
+  { route: '/', icon: 'record', label: '记一笔' },
+  { route: '/list', icon: 'list', label: '账单' },
+  { route: '/budget', icon: 'budget', label: '预算' },
+  { route: '/settings', icon: 'profile', label: '我的' },
 ];
 
 export function TabBar({ current }: { current: Route }) {
@@ -18,9 +19,7 @@ export function TabBar({ current }: { current: Route }) {
           aria-current={current === route ? 'page' : undefined}
           onClick={() => navigate(route)}
         >
-          <span className={styles.icon} aria-hidden="true">
-            {icon}
-          </span>
+          <Icon name={icon} size={23} strokeWidth={current === route ? 2.1 : 1.7} />
           <span className={styles.label}>{label}</span>
         </button>
       ))}
