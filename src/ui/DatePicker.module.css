@@ -1,7 +1,9 @@
+/* 层级约定：Toast 90 > DatePicker 80 > EditSheet 70。
+   日期选择器可以从编辑弹层里唤起，所以必须比它高。 */
 .backdrop {
   position: fixed;
   inset: 0;
-  z-index: 70;
+  z-index: 80;
   background: rgb(0 0 0 / 32%);
   animation: fade 0.18s ease;
 }
@@ -17,7 +19,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 71;
+  z-index: 81;
   background: var(--bg);
   border-radius: var(--r-lg) var(--r-lg) 0 0;
   padding: 8px 16px calc(16px + var(--safe-b));

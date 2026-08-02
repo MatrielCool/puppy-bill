@@ -4,19 +4,12 @@ import { TabBar } from './ui/TabBar';
 import { Toast, type ToastData } from './ui/Toast';
 import { RecordScreen } from './features/record/RecordScreen';
 import { ListScreen } from './features/list/ListScreen';
+import { BudgetScreen } from './features/budget/BudgetScreen';
 import { SettingsScreen } from './features/settings/SettingsScreen';
 import { seedIfEmpty } from './db/seed';
-import styles from './App.module.css';
-
-function Placeholder({ woof, sub }: { woof: string; sub: string }) {
-  return (
-    <div className={styles.placeholder}>
-      <img className={styles.puppy} src={`${import.meta.env.BASE_URL}pwa-192x192.png`} alt="小狗" />
-      <p className={styles.woof}>{woof}</p>
-      <p className={styles.sub}>{sub}</p>
-    </div>
-  );
-}
+import { getMonthBudgetView } from './db/budgets';
+import { currentMonthKey } from './lib/dates';
+import { syncBadge } from './lib/badge';
 
 export function App() {
   const route = useRoute();
@@ -28,6 +21,20 @@ export function App() {
     void seedIfEmpty().finally(() => setReady(true));
   }, []);
 
+  // 角标只能在 app 运行时更新，所以在切到后台前写入最新的超支数 ——
+  // 之后它会一直停在主屏图标上，直到下次打开 app。
+  useEffect(() => {
+    const update = () =>
+      void getMonthBudgetView(currentMonthKey()).then((view) => syncBadge(view.overCount));
+
+    const onHide = () => {
+      if (document.visibilityState === 'hidden') update();
+    };
+    document.addEventListener('visibilitychange', onHide);
+    update();
+    return () => document.removeEventListener('visibilitychange', onHide);
+  }, []);
+
   if (!ready) return null;
 
   return (
@@ -35,9 +42,7 @@ export function App() {
       <main className="app-main">
         {route === '/' && <RecordScreen onToast={setToast} />}
         {route === '/list' && <ListScreen onToast={setToast} />}
-        {route === '/budget' && (
-          <Placeholder woof="还没设预算" sub="Phase 4 会做预算环和每日可用额度。" />
-        )}
+        {route === '/budget' && <BudgetScreen />}
         {route === '/settings' && <SettingsScreen onToast={setToast} />}
       </main>
       <TabBar current={route} />

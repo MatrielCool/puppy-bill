@@ -10,6 +10,7 @@ import { KindSegmented } from '../../ui/Segmented';
 import { DatePicker } from '../../ui/DatePicker';
 import type { ToastData } from '../../ui/Toast';
 import { useKeypad } from './useKeypadReducer';
+import { Keypad } from './Keypad';
 import { SuccessBurst } from './SuccessBurst';
 import styles from './RecordScreen.module.css';
 
@@ -155,38 +156,12 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
         />
       </div>
 
-      <div className={styles.keypad}>
-        {['1', '2', '3'].map((d) => (
-          <Key key={d} label={d} onPress={() => dispatch({ type: 'digit', value: d })} />
-        ))}
-        <button
-          className={clsx(styles.key, styles.keyFn)}
-          onClick={() => dispatch({ type: 'backspace' })}
-          aria-label="退格"
-        >
-          <Icon name="backspace" size={28} />
-        </button>
-
-        {['4', '5', '6'].map((d) => (
-          <Key key={d} label={d} onPress={() => dispatch({ type: 'digit', value: d })} />
-        ))}
-        {/* 收支切换移到顶部后，完成键得以跨三行，成为最容易按到的目标 */}
-        <button
-          className={clsx(styles.key, styles.keyDone, state.kind === 'income' && styles.keyDoneIncome)}
-          disabled={!canSubmit}
-          onClick={handleSubmit}
-        >
-          完成
-        </button>
-
-        {['7', '8', '9'].map((d) => (
-          <Key key={d} label={d} onPress={() => dispatch({ type: 'digit', value: d })} />
-        ))}
-
-        <Key label="." onPress={() => dispatch({ type: 'dot' })} />
-        <Key label="0" onPress={() => dispatch({ type: 'digit', value: '0' })} />
-        <Key label="00" onPress={() => dispatch({ type: 'digit', value: '0' })} double />
-      </div>
+      <Keypad
+        dispatch={dispatch}
+        canSubmit={canSubmit}
+        onSubmit={handleSubmit}
+        kind={state.kind}
+      />
 
       {datePickerOpen && (
         <DatePicker
@@ -196,27 +171,5 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
         />
       )}
     </div>
-  );
-}
-
-function Key({
-  label,
-  onPress,
-  double = false,
-}: {
-  label: string;
-  onPress: () => void;
-  double?: boolean;
-}) {
-  return (
-    <button
-      className={styles.key}
-      onClick={() => {
-        onPress();
-        if (double) onPress(); // "00" 键按两次 0
-      }}
-    >
-      {label}
-    </button>
   );
 }

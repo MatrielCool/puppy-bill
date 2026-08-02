@@ -1,0 +1,64 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgb(0 0 0 / 32%);
+  animation: fade 0.18s ease;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: 71;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  animation: slideUp 0.26s cubic-bezier(0.32, 1.2, 0.6, 1);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(10px + var(--safe-t)) 12px 8px;
+  flex-shrink: 0;
+}
+
+.headerBtn {
+  padding: 8px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-2);
+  border-radius: var(--r-full);
+}
+
+.headerTitle {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.deleteBtn {
+  color: var(--danger);
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}

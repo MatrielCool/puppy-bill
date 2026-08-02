@@ -48,6 +48,12 @@ export function formatDayHeader(dateKey: string): string {
   return `${d.getMonth() + 1}月${d.getDate()}日 ${WEEKDAYS[d.getDay()]}`;
 }
 
+/** 'YYYY-MM' 前后移动 n 个月。用 Date 运算而非手算，自动处理跨年。 */
+export function shiftMonth(monthKey: string, delta: number): string {
+  const [y, m] = monthKey.split('-').map(Number);
+  return toMonthKey(new Date(y, m - 1 + delta, 1));
+}
+
 /** 'YYYY-MM' → '2026年8月' */
 export function formatMonthLabel(monthKey: string): string {
   const [y, m] = monthKey.split('-');

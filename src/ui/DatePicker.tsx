@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { Icon } from './Icon';
 import { dateKeyOffset, formatMonthLabel, todayKey, toDateKey } from '../lib/dates';
@@ -32,6 +33,10 @@ export function DatePicker({
   const daysInMonth = new Date(viewMonth.year, viewMonth.month + 1, 0).getDate();
   const monthKey = `${viewMonth.year}-${String(viewMonth.month + 1).padStart(2, '0')}`;
 
+  // 固定 6 行 42 格。月份天数和起始星期不同会让网格高度在 4~6 行间变化，
+  // 导致上/下月按钮位置跟着跳，容易误触。补足空格让高度恒定。
+  const trailingBlanks = 42 - firstWeekday - daysInMonth;
+
   const shift = (delta: number) => {
     const d = new Date(viewMonth.year, viewMonth.month + delta, 1);
     setViewMonth({ year: d.getFullYear(), month: d.getMonth() });
@@ -47,7 +52,9 @@ export function DatePicker({
     onClose();
   };
 
-  return (
+  // 用 portal 挂到 body：选择器渲染在页面内部时会受父层堆叠上下文影响，
+  // 导致底部标签栏盖在它上面。挂到 body 才能确实盖住整个下半屏。
+  return createPortal(
     <>
       <div className={styles.backdrop} onClick={onClose} />
       <div className={styles.sheet} role="dialog" aria-label="选择日期">
@@ -109,8 +116,12 @@ export function DatePicker({
               </button>
             );
           })}
+          {Array.from({ length: trailingBlanks }, (_, i) => (
+            <div key={`tail-${i}`} className={styles.blank} />
+          ))}
         </div>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }

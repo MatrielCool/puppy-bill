@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import styles from './Toast.module.css';
 
 export interface ToastData {
@@ -15,7 +16,8 @@ export function Toast({ data, onDismiss }: { data: ToastData; onDismiss: () => v
     return () => clearTimeout(timer);
   }, [data.id, onDismiss]);
 
-  return (
+  // 同 DatePicker：挂到 body，避免被页面内的堆叠上下文压在下面
+  return createPortal(
     <div className={styles.wrap} role="status">
       <span className={styles.text}>{data.text}</span>
       {data.actionLabel && (
@@ -29,6 +31,7 @@ export function Toast({ data, onDismiss }: { data: ToastData; onDismiss: () => v
           {data.actionLabel}
         </button>
       )}
-    </div>
+    </div>,
+    document.body,
   );
 }

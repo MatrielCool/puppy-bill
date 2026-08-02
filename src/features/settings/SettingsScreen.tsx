@@ -7,6 +7,10 @@ import { getSetting, setSetting, SETTING_LAST_BACKUP_AT } from '../../lib/settin
 import { exportCsv, exportJson } from '../backup/exportBackup';
 import { importBackup, type ImportMode } from '../backup/importBackup';
 import { BackupError } from '../backup/backupSchema';
+import { badgePermissionState, requestBadgePermission, syncBadge } from '../../lib/badge';
+import { getMonthBudgetView } from '../../db/budgets';
+import { currentMonthKey } from '../../lib/dates';
+import { ReminderGuide } from './ReminderGuide';
 import type { ToastData } from '../../ui/Toast';
 import styles from './SettingsScreen.module.css';
 
@@ -28,6 +32,8 @@ function detectStandalone(): boolean {
 export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => void }) {
   const [info, setInfo] = useState<StorageInfo | null>(null);
   const [lastBackupAt, setLastBackupAt] = useState<number | null>(null);
+  const [badgeState, setBadgeState] = useState(badgePermissionState);
+  const [guideOpen, setGuideOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const importModeRef = useRef<ImportMode>('merge');
 
@@ -98,6 +104,21 @@ export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => voi
       onToast({
         id: Date.now(),
         text: error instanceof BackupError ? error.message : `导入失败：${(error as Error).message}`,
+      });
+    }
+  };
+
+  const handleBadgeToggle = async () => {
+    const granted = await requestBadgePermission();
+    setBadgeState(badgePermissionState());
+    if (granted) {
+      const view = await getMonthBudgetView(currentMonthKey());
+      await syncBadge(view.overCount);
+      onToast({ id: Date.now(), text: '超支时会在图标上显示数字' });
+    } else {
+      onToast({
+        id: Date.now(),
+        text: '未获得权限。可在 iPhone 设置 → 通知 → 小狗账单 中开启',
       });
     }
   };
@@ -178,6 +199,47 @@ export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => voi
       </div>
 
       <div className={styles.section}>
+        <p className={styles.sectionTitle}>提醒</p>
+        <div className={styles.card}>
+          <button className={clsx(styles.row, styles.rowBtn)} onClick={() => setGuideOpen(true)}>
+            <span className={styles.rowMain}>
+              <span className={styles.rowLabel}>设置每日提醒</span>
+              <span className={styles.rowSub}>用 iPhone 快捷指令，设置一次即可</span>
+            </span>
+            <span className={styles.chevron}>›</span>
+          </button>
+
+          {badgeState !== 'unsupported' && (
+            <button
+              className={clsx(styles.row, styles.rowBtn)}
+              onClick={handleBadgeToggle}
+              disabled={badgeState !== 'default'}
+            >
+              <span className={styles.rowMain}>
+                <span className={styles.rowLabel}>图标显示超支提醒</span>
+                <span className={styles.rowSub}>
+                  小狗账单不会推送通知（它做不到），权限只用于画角标
+                </span>
+              </span>
+              <span
+                className={clsx(
+                  styles.value,
+                  badgeState === 'granted' && styles.ok,
+                  badgeState === 'denied' && styles.bad,
+                )}
+              >
+                {badgeState === 'granted' ? '已开启' : badgeState === 'denied' ? '已拒绝' : '开启'}
+              </span>
+            </button>
+          )}
+        </div>
+        <p className={styles.note}>
+          iOS 不允许网页 App 自己定时弹通知，所以每日提醒要借助系统的「快捷指令」。
+          图标角标只反映你上次关闭 app 时的超支状态。
+        </p>
+      </div>
+
+      <div className={styles.section}>
         <p className={styles.sectionTitle}>运行状态</p>
         <div className={styles.card}>
           <div className={styles.row}>
@@ -223,6 +285,13 @@ export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => voi
         accept="application/json,.json"
         onChange={handleFile}
       />
+
+      {guideOpen && (
+        <ReminderGuide
+          onClose={() => setGuideOpen(false)}
+          onCopy={() => onToast({ id: Date.now(), text: '提醒文案已复制' })}
+        />
+      )}
     </div>
   );
 }
