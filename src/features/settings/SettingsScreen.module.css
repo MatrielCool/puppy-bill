@@ -1,0 +1,137 @@
+.wrap {
+  padding: 12px 16px calc(24px + var(--safe-b));
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-3);
+  margin: 0 0 8px 4px;
+  letter-spacing: 0.02em;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.rowBtn:active {
+  background: var(--surface-2);
+}
+
+.rowLabel {
+  font-size: 15px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.rowSub {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.value {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-all;
+}
+
+.chevron {
+  color: var(--ink-3);
+  flex-shrink: 0;
+  font-size: 18px;
+}
+
+.ok {
+  color: var(--ok);
+}
+.bad {
+  color: var(--danger);
+}
+.warn {
+  color: var(--warn);
+}
+
+/* 备份提醒横幅 */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  margin-bottom: 16px;
+  background: color-mix(in srgb, var(--warn) 14%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--warn) 40%, transparent);
+}
+
+.bannerUrgent {
+  background: color-mix(in srgb, var(--danger) 12%, var(--surface));
+  border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+}
+
+.bannerText {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.bannerBtn {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: var(--r-full);
+  background: var(--brand);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.dangerText {
+  color: var(--danger);
+}
+
+.note {
+  font-size: 12px;
+  color: var(--ink-3);
+  line-height: 1.7;
+  margin: 8px 4px 0;
+}
+
+.hiddenInput {
+  display: none;
+}

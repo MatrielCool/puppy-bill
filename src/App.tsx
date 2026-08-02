@@ -4,7 +4,7 @@ import { TabBar } from './ui/TabBar';
 import { Toast, type ToastData } from './ui/Toast';
 import { RecordScreen } from './features/record/RecordScreen';
 import { ListScreen } from './features/list/ListScreen';
-import { StatusPanel } from './features/status/StatusPanel';
+import { SettingsScreen } from './features/settings/SettingsScreen';
 import { seedIfEmpty } from './db/seed';
 import styles from './App.module.css';
 
@@ -38,7 +38,7 @@ export function App() {
         {route === '/budget' && (
           <Placeholder woof="还没设预算" sub="Phase 4 会做预算环和每日可用额度。" />
         )}
-        {route === '/settings' && <StatusPanel />}
+        {route === '/settings' && <SettingsScreen onToast={setToast} />}
       </main>
       <TabBar current={route} />
       {toast && <Toast key={toast.id} data={toast} onDismiss={() => setToast(null)} />}
