@@ -1,0 +1,83 @@
+@import './tokens.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  /* 禁止 iOS 横竖屏切换时自动放大字号 */
+  -webkit-text-size-adjust: 100%;
+  /* PWA 里整页不应该有橡皮筋回弹，滚动交给内部容器 */
+  overscroll-behavior-y: none;
+}
+
+/* 所有可点元素：干掉 iOS 的 300ms 双击缩放延迟和灰色高亮块 */
+button,
+a,
+[role='button'] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* UI 元素不可选中，否则长按会弹出 iOS 的文本选择放大镜 */
+button,
+[role='button'],
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 输入框字号必须 ≥16px，否则 iOS 聚焦时会自动放大整个页面 */
+input,
+textarea,
+select {
+  font: inherit;
+  font-size: 16px;
+}
+
+/* 用 dvh 而不是 vh：iOS 上 vh 不随地址栏收起而变化，会导致底部被裁掉 */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.app-main {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: var(--safe-t);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

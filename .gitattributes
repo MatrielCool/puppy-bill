@@ -1,0 +1,6 @@
+# 仓库内一律用 LF 存储，避免 Windows 开发 + Linux CI 之间的换行符噪音
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.woff2 binary

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      viewport-fit=cover：让内容延伸到刘海/灵动岛和底部 Home 指示条区域，
+      再用 env(safe-area-inset-*) 把内容推回安全区。缺了它 PWA 上下会有白边。
+      user-scalable=no：记账是纯点击操作，双指缩放只会误触。
+    -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <meta name="theme-color" content="#F5A25D" />
+
+    <!-- iOS 主屏 Web App。缺 apple-mobile-web-app-capable 就不会全屏运行。 -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="小狗账单" />
+
+    <!-- iOS 用这个文件做主屏图标，不读 manifest 里的 icons。必须 180×180 且不透明。 -->
+    <link rel="apple-touch-icon" href="/puppy-bill/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/puppy-bill/favicon.svg" />
+
+    <title>小狗账单</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

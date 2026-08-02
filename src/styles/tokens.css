@@ -1,0 +1,67 @@
+/* 小狗账单设计令牌：暖色、圆润、亲和。
+   深浅色都通过同一组变量名切换，组件里永远不写死颜色。 */
+
+:root {
+  /* 品牌 */
+  --brand: #f5a25d;
+  --brand-strong: #e0873c;
+  --brand-soft: #ffe3c6;
+  --brand-ink: #8a4b18;
+
+  /* 背景与表面 */
+  --bg: #fff8f0;
+  --surface: #ffffff;
+  --surface-2: #fff3e6;
+  --border: #f0e0cf;
+
+  /* 文字 */
+  --ink: #3b2a1e;
+  --ink-2: #6b5647;
+  --ink-3: #a8968a;
+
+  /* 语义色 */
+  --danger: #e0524f;
+  --ok: #3e9b62;
+  --warn: #e0982f;
+
+  /* 圆角与阴影 */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-full: 999px;
+  --shadow-1: 0 1px 2px rgb(59 42 30 / 6%), 0 4px 12px rgb(59 42 30 / 6%);
+  --shadow-2: 0 2px 6px rgb(59 42 30 / 8%), 0 12px 28px rgb(59 42 30 / 10%);
+
+  /* 安全区（刘海 / Home 指示条） */
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --brand: #f0a468;
+    --brand-strong: #ffbe86;
+    --brand-soft: #4a3524;
+    --brand-ink: #ffd6ab;
+
+    --bg: #17120f;
+    --surface: #221a15;
+    --surface-2: #2c221b;
+    --border: #3a2d24;
+
+    --ink: #f5e9dd;
+    --ink-2: #c3b1a3;
+    --ink-3: #8b7a6d;
+
+    --danger: #f0736f;
+    --ok: #5cb87f;
+    --warn: #f0b155;
+
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 30%), 0 4px 12px rgb(0 0 0 / 24%);
+    --shadow-2: 0 2px 6px rgb(0 0 0 / 34%), 0 12px 28px rgb(0 0 0 / 30%);
+
+    color-scheme: dark;
+  }
+}
