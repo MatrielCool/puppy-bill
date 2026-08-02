@@ -58,6 +58,47 @@ select {
   font-size: 16px;
 }
 
+/* 图标配色。图标内部用 class 而非 fill="var(...)"，因为 CSS 变量在 SVG
+   呈现属性里的支持度不如 CSS 类可靠。定义在全局是因为图标内容通过
+   innerHTML 注入，拿不到 CSS Module 的哈希类名。 */
+.ic-ink {
+  fill: var(--ic-ink);
+}
+.ic-peach {
+  fill: var(--ic-peach);
+}
+.ic-mint {
+  fill: var(--ic-mint);
+}
+.ic-butter {
+  fill: var(--ic-butter);
+}
+.ic-coral {
+  fill: var(--ic-coral);
+}
+.ic-paper {
+  fill: var(--ic-paper);
+}
+
+/* 描边构件：用于把手、提梁这类细长形状 —— 描边比"实心块挖洞"可靠，
+   不依赖填充规则，不会意外糊成一坨 */
+.ic-ink-stroke {
+  fill: none;
+  stroke: var(--ic-ink);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 界面构件类图标（返回箭头、关闭）保持单色描边，不参与多色装饰 */
+.ic-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 /* 用 dvh 而不是 vh：iOS 上 vh 不随地址栏收起而变化，会导致底部被裁掉 */
 .app-shell {
   display: flex;

@@ -19,7 +19,7 @@ export function TabBar({ current }: { current: Route }) {
           aria-current={current === route ? 'page' : undefined}
           onClick={() => navigate(route)}
         >
-          <Icon name={icon} size={23} strokeWidth={current === route ? 2.1 : 1.7} />
+          <Icon name={icon} size={28} />
           <span className={styles.label}>{label}</span>
         </button>
       ))}

@@ -130,7 +130,7 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
             className={clsx(styles.chip, state.categoryId === c.id && styles.chipOn)}
             onClick={() => dispatch({ type: 'setCategory', categoryId: c.id })}
           >
-            <Icon name={c.icon as IconName} size={23} className={styles.chipIcon} />
+            <Icon name={c.icon as IconName} size={32} className={styles.chipIcon} />
             <span className={styles.chipName}>{c.name}</span>
           </button>
         ))}
@@ -141,7 +141,7 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
           className={clsx(styles.datePill, !isToday && styles.pillOn)}
           onClick={() => setDatePickerOpen(true)}
         >
-          <Icon name="calendar" size={16} />
+          <Icon name="calendar" size={19} />
           {isToday ? '今天' : formatDayHeader(state.dateKey)}
         </button>
         <input
@@ -164,7 +164,7 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
           onClick={() => dispatch({ type: 'backspace' })}
           aria-label="退格"
         >
-          <Icon name="backspace" size={22} />
+          <Icon name="backspace" size={28} />
         </button>
 
         {['4', '5', '6'].map((d) => (

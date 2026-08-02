@@ -32,6 +32,15 @@
   --shadow-1: 0 1px 2px rgb(59 42 30 / 6%), 0 4px 12px rgb(59 42 30 / 6%);
   --shadow-2: 0 2px 6px rgb(59 42 30 / 8%), 0 12px 28px rgb(59 42 30 / 10%);
 
+  /* 图标专用配色：暗色主体 + 亮色点缀的多色扁平风。
+     单独成组是因为图标的色值不该跟着文字/背景走 —— 它们要在任何底色上都保持辨识度。 */
+  --ic-ink: #4a4440;
+  --ic-peach: #ffc0a4;
+  --ic-mint: #5fd3a8;
+  --ic-butter: #ffd37e;
+  --ic-coral: #ff8e77;
+  --ic-paper: #fffaf4;
+
   /* 安全区（刘海 / Home 指示条） */
   --safe-t: env(safe-area-inset-top, 0px);
   --safe-b: env(safe-area-inset-bottom, 0px);
@@ -61,6 +70,14 @@
 
     --shadow-1: 0 1px 2px rgb(0 0 0 / 30%), 0 4px 12px rgb(0 0 0 / 24%);
     --shadow-2: 0 2px 6px rgb(0 0 0 / 34%), 0 12px 28px rgb(0 0 0 / 30%);
+
+    /* 深色模式下主体色提亮，点缀色略压暗以免在暗背景上刺眼 */
+    --ic-ink: #efe2d6;
+    --ic-peach: #e09a76;
+    --ic-mint: #4bb98f;
+    --ic-butter: #e0b45f;
+    --ic-coral: #e07059;
+    --ic-paper: #2c221b;
 
     color-scheme: dark;
   }

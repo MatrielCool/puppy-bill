@@ -16,7 +16,7 @@ export function SuccessBurst() {
   return (
     <div className={styles.overlay} aria-hidden="true">
       <span className={styles.paw}>
-        <Icon name="pet" size={84} strokeWidth={1.6} />
+        <Icon name="pet" size={92} />
       </span>
       <span className={styles.bubble}>汪!</span>
       {DOTS.map((d, i) => (

@@ -88,7 +88,7 @@ export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void })
               return (
                 <div key={row.id} className={styles.row}>
                   <span className={styles.rowIcon}>
-                    <Icon name={(cat?.icon ?? 'other') as IconName} size={20} />
+                    <Icon name={(cat?.icon ?? 'other') as IconName} size={26} />
                   </span>
                   <span className={styles.rowMain}>
                     <span className={styles.rowName}>{cat?.name ?? '未知分类'}</span>
