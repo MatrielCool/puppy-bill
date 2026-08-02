@@ -6,12 +6,17 @@
  *
  * 运行：npm run icons
  */
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
 import { puppySvg } from './icon.mjs';
 
-const out = (name) => fileURLToPath(new URL(`../public/${name}`, import.meta.url));
+const publicDir = fileURLToPath(new URL('../public/', import.meta.url));
+const out = (name) => `${publicDir}${name}`;
+
+// public/ 里的图标全部被 .gitignore 排除，而 git 不跟踪空目录，
+// 所以全新 clone（比如 CI）里这个目录根本不存在。
+await mkdir(publicDir, { recursive: true });
 
 await initWasm(
   await readFile(
