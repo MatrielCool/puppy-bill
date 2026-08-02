@@ -1,0 +1,261 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ── 顶部汇总条 ── */
+.summary {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 16px 8px;
+  font-size: 13px;
+  color: var(--ink-2);
+  flex-shrink: 0;
+}
+
+.summaryToday {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.summaryDot {
+  color: var(--ink-3);
+}
+
+/* ── 金额显示 ── */
+.amountRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 4px 20px 12px;
+  flex-shrink: 0;
+}
+
+.currency {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink-3);
+}
+
+.amount {
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.amountZero {
+  color: var(--ink-3);
+}
+
+.amountIncome {
+  color: var(--ok);
+}
+
+.caret {
+  display: inline-block;
+  width: 3px;
+  height: 40px;
+  background: var(--brand);
+  border-radius: 2px;
+  margin-left: 2px;
+  vertical-align: -4px;
+  animation: blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* ── 分类横滑条 ── */
+.categoryStrip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 16px 12px;
+  flex-shrink: 0;
+  scrollbar-width: none;
+  /* 惯性滚动 + 每个芯片吸附 */
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+
+.categoryStrip::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  flex-shrink: 0;
+  min-width: 62px;
+  scroll-snap-align: center;
+  transition:
+    transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.16s ease,
+    background 0.16s ease;
+}
+
+.chip:active {
+  transform: scale(0.94);
+}
+
+.chipOn {
+  background: var(--brand-soft);
+  border-color: var(--brand);
+  transform: scale(1.04);
+}
+
+.chipEmoji {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.chipName {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.chipOn .chipName {
+  color: var(--brand-ink);
+}
+
+/* ── 日期 + 备注 ── */
+.metaRow {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 12px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.pill {
+  padding: 7px 14px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.pillOn {
+  background: var(--brand-soft);
+  border-color: var(--brand);
+  color: var(--brand-ink);
+}
+
+.noteInput {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 14px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  color: var(--ink);
+  outline: none;
+}
+
+.noteInput:focus {
+  border-color: var(--brand);
+}
+
+.noteInput::placeholder {
+  color: var(--ink-3);
+}
+
+/* ── 键盘 ── */
+.keypad {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 8px;
+  padding: 8px 10px calc(8px + var(--safe-b));
+  background: var(--surface-2);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  /* 键盘占屏幕下半部分，全在拇指可达范围内 */
+  height: min(46dvh, 340px);
+}
+
+.key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  box-shadow: var(--shadow-1);
+  transition:
+    transform 0.08s ease,
+    background 0.08s ease;
+}
+
+.key:active {
+  transform: scale(0.95);
+  background: var(--brand-soft);
+}
+
+.keyFn {
+  font-size: 19px;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  box-shadow: none;
+  border: 1.5px solid var(--border);
+}
+
+/* 完成键：跨两行、暖橙、右下角拇指最容易够到的位置 */
+.keyDone {
+  grid-row: span 2;
+  background: var(--brand);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: var(--shadow-2);
+}
+
+.keyDone:active {
+  background: var(--brand-strong);
+}
+
+.keyDone:disabled {
+  background: var(--border);
+  color: var(--ink-3);
+  box-shadow: none;
+}
+
+.kindKey {
+  font-size: 15px;
+  font-weight: 700;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.kindExpense {
+  color: var(--ink);
+}
+
+.kindIncome {
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 12%, var(--surface));
+}

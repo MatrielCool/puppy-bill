@@ -1,9 +1,13 @@
+import { useEffect, useState } from 'react';
 import { useRoute } from './lib/router';
 import { TabBar } from './ui/TabBar';
+import { Toast, type ToastData } from './ui/Toast';
+import { RecordScreen } from './features/record/RecordScreen';
+import { ListScreen } from './features/list/ListScreen';
 import { StatusPanel } from './features/status/StatusPanel';
+import { seedIfEmpty } from './db/seed';
 import styles from './App.module.css';
 
-/** Phase 0 占位页。功能会从 Phase 1 起逐个替换掉它们。 */
 function Placeholder({ woof, sub }: { woof: string; sub: string }) {
   return (
     <div className={styles.placeholder}>
@@ -16,22 +20,28 @@ function Placeholder({ woof, sub }: { woof: string; sub: string }) {
 
 export function App() {
   const route = useRoute();
+  const [toast, setToast] = useState<ToastData | null>(null);
+  const [ready, setReady] = useState(false);
+
+  // 首次启动写入内置分类
+  useEffect(() => {
+    void seedIfEmpty().finally(() => setReady(true));
+  }, []);
+
+  if (!ready) return null;
 
   return (
     <div className="app-shell">
       <main className="app-main">
-        {route === '/' && (
-          <Placeholder woof="汪！" sub="管线已经通了。下一步给我装上数字键盘，就能开始记账啦。" />
-        )}
-        {route === '/list' && (
-          <Placeholder woof="账单还是空的" sub="Phase 3 会做月份切换、搜索和筛选。" />
-        )}
+        {route === '/' && <RecordScreen onToast={setToast} />}
+        {route === '/list' && <ListScreen onToast={setToast} />}
         {route === '/budget' && (
           <Placeholder woof="还没设预算" sub="Phase 4 会做预算环和每日可用额度。" />
         )}
         {route === '/settings' && <StatusPanel />}
       </main>
       <TabBar current={route} />
+      {toast && <Toast key={toast.id} data={toast} onDismiss={() => setToast(null)} />}
     </div>
   );
 }
