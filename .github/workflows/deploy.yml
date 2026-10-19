@@ -26,6 +26,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - run: npm run lint
+      - run: npm test
       # 图标由 SVG 源码生成，不提交 PNG 到仓库也能构建
       - run: npm run icons
       - run: npm run build

@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { useRoute } from './lib/router';
 import { TabBar } from './ui/TabBar';
 import { Toast, type ToastData } from './ui/Toast';
 import { RecordScreen } from './features/record/RecordScreen';
 import { ListScreen } from './features/list/ListScreen';
+import { PendingScreen } from './features/pending/PendingScreen';
 import { BudgetScreen } from './features/budget/BudgetScreen';
 import { SettingsScreen } from './features/settings/SettingsScreen';
 import { seedIfEmpty } from './db/seed';
 import { getMonthBudgetView } from './db/budgets';
+import { getDueSummary } from './db/receivables';
 import { currentMonthKey } from './lib/dates';
 import { syncBadge } from './lib/badge';
 
@@ -15,6 +18,10 @@ export function App() {
   const route = useRoute();
   const [toast, setToast] = useState<ToastData | null>(null);
   const [ready, setReady] = useState(false);
+
+  // 到期该催的笔数，同时喂给标签栏红点和记一笔页的横幅。
+  // iOS 原生通知由应用级订阅独立安排，网页仍保留这两处站内提示。
+  const due = useLiveQuery(getDueSummary, [], { count: 0, cents: 0 });
 
   // 首次启动写入内置分类
   useEffect(() => {
@@ -42,10 +49,11 @@ export function App() {
       <main className="app-main">
         {route === '/' && <RecordScreen onToast={setToast} />}
         {route === '/list' && <ListScreen onToast={setToast} />}
+        {route === '/pending' && <PendingScreen onToast={setToast} />}
         {route === '/budget' && <BudgetScreen />}
         {route === '/settings' && <SettingsScreen onToast={setToast} />}
       </main>
-      <TabBar current={route} />
+      <TabBar current={route} badges={{ '/pending': due.count }} />
       {toast && <Toast key={toast.id} data={toast} onDismiss={() => setToast(null)} />}
     </div>
   );

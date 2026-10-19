@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { db, SCHEMA_VERSION } from '../src/db/db';
 import { seedIfEmpty } from '../src/db/seed';
 import { addTransaction, softDeleteTransaction } from '../src/db/mutations';
+import { addReceivable } from '../src/db/receivables';
+import { setSetting } from '../src/lib/settings';
 import { buildBackup } from '../src/features/backup/exportBackup';
 import { importBackup } from '../src/features/backup/importBackup';
 import { BackupError, parseBackup } from '../src/features/backup/backupSchema';
@@ -14,6 +16,7 @@ async function wipe() {
     db.budgets.clear(),
     db.settings.clear(),
     db.snapshots.clear(),
+    db.receivables.clear(),
   ]);
 }
 
@@ -31,6 +34,17 @@ async function makeSampleData() {
     kind: 'expense', amountCents: 100, categoryId: 'c_food', dateKey: '2026-08-02', note: '记错了',
   });
   await softDeleteTransaction(gone);
+  // 未结清的待入账 —— 刻意不结清，否则会多出一笔收入，打乱下面按笔数写死的断言
+  await addReceivable({
+    title: 'XX 品牌 VI 设计',
+    projectCents: 1_200_000,
+    reimburseCents: 80_000,
+    contactName: '张三',
+    contactInfo: '13800138000',
+    remindDateKey: '2026-09-08',
+    startDateKey: '2026-08-09',
+    note: '验收后 30 天付',
+  });
 }
 
 describe('备份往返 —— 整个项目最重要的测试', () => {
@@ -47,6 +61,29 @@ describe('备份往返 —— 整个项目最重要的测试', () => {
 
     expect(await db.transactions.orderBy('id').toArray()).toEqual(before);
     expect(await db.categories.orderBy('id').toArray()).toEqual(beforeCats);
+  });
+
+  it('待入账也在备份里 —— 那是真金白银的应收账，丢了就不知道谁还欠钱', async () => {
+    await makeSampleData();
+    const before = await db.receivables.orderBy('id').toArray();
+    expect(before).toHaveLength(1);
+
+    const json = JSON.stringify(await buildBackup());
+    await wipe();
+    await importBackup(json, 'replace');
+
+    expect(await db.receivables.orderBy('id').toArray()).toEqual(before);
+  });
+
+  it('覆盖导入会把 settings 一并恢复', async () => {
+    await makeSampleData();
+    await setSetting('lastBackupAt', 1_700_000_000_000);
+
+    const json = JSON.stringify(await buildBackup());
+    await wipe();
+    await importBackup(json, 'replace');
+
+    expect((await db.settings.get('lastBackupAt'))?.value).toBe(1_700_000_000_000);
   });
 
   it('备份包含软删除的记录 —— 它们是撤销和安全合并的依据', async () => {
@@ -213,6 +250,26 @@ describe('导入校验拦截坏文件', () => {
       },
     };
     expect(() => parseBackup(JSON.stringify(bad))).toThrow(BackupError);
+  });
+
+  it('接受 v3 之前的老备份 —— 那时还没有 receivables 字段', async () => {
+    const old = {
+      ...valid(),
+      schemaVersion: 2,
+      counts: { transactions: 0, categories: 0, budgets: 0 },
+      data: { transactions: [], categories: [], budgets: [], settings: [] },
+    };
+    const parsed = parseBackup(JSON.stringify(old));
+    expect(parsed.data.receivables).toEqual([]);
+    expect(parsed.counts.receivables).toBe(0);
+  });
+
+  it('待入账被截断时同样拦下', () => {
+    const truncated = {
+      ...valid(),
+      counts: { transactions: 0, categories: 0, budgets: 0, receivables: 2 },
+    };
+    expect(() => parseBackup(JSON.stringify(truncated))).toThrow(/不完整|截断/);
   });
 
   it('校验失败时不会动数据库', async () => {

@@ -1,124 +1,47 @@
 @import './tokens.css';
-
-* {
-  box-sizing: border-box;
+/* 本地字体随应用缓存；中文使用各平台系统黑体。 */
+@font-face {
+  font-family: 'Manrope';
+  src: url('../assets/fonts/manrope-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
 }
-
-html,
-body,
-#root {
-  height: 100%;
-}
-
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-    system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  /* 禁止 iOS 横竖屏切换时自动放大字号 */
-  -webkit-text-size-adjust: 100%;
-  /* PWA 里整页不应该有橡皮筋回弹，滚动交给内部容器 */
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font-ui); font-size: var(--text-body); line-height: 1.6;
+  -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%;
   overscroll-behavior-y: none;
 }
-
-/* 所有可点元素：干掉 iOS 的 300ms 双击缩放延迟和灰色高亮块 */
-button,
-a,
-[role='button'] {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+button, a, [role='button'] { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+button { font: inherit; color: inherit; border: none; background: none; padding: 0; cursor: pointer; }
+button, [role='button'], .no-select { -webkit-user-select: none; user-select: none; }
+button:disabled { cursor: default; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 3px; }
+input, textarea, select { font: inherit; font-size: 16px; }
+input::placeholder, textarea::placeholder { color: var(--ink-3); opacity: 1; }
+svg { flex-shrink: 0; }
+.ic-ink { fill: var(--ic-ink); }
+.ic-peach { fill: var(--icon-accent, var(--ic-peach)); }
+.ic-mint { fill: var(--icon-accent, var(--ic-mint)); }
+.ic-butter { fill: var(--icon-accent, var(--ic-butter)); }
+.ic-coral { fill: var(--icon-accent, var(--ic-coral)); }
+.ic-lavender { fill: var(--icon-accent, var(--ic-lavender)); }
+.ic-paper { fill: var(--ic-paper); }
+.ic-stroke { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.app-shell { display: flex; flex-direction: column; height: 100dvh; max-width: 480px; margin: 0 auto; overflow: hidden; background: var(--bg); }
+.app-main { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-top: var(--safe-t); scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.page-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.page-title { font-size: var(--text-title); font-weight: var(--weight-title); line-height: 1.35; letter-spacing: .025em; margin: 0; }
+.page-eyebrow { font-family: var(--font-number); font-size: 10px; font-weight: 600; letter-spacing: .15em; color: var(--ink-3); margin: 0 0 5px; }
+.page-caption { font-size: var(--text-caption); color: var(--ink-3); margin: 7px 0 0; }
+.page-mascot { width: 46px; height: 46px; border-radius: 17px; background: var(--surface); display: grid; place-items: center; border: 1px solid var(--border); }
+@media (min-width: 600px) {
+  body { background: var(--surface-2); }
+  .app-shell { border-inline: 1px solid var(--border); }
 }
-
-button {
-  font: inherit;
-  color: inherit;
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-/* UI 元素不可选中，否则长按会弹出 iOS 的文本选择放大镜 */
-button,
-[role='button'],
-.no-select {
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-/* 输入框字号必须 ≥16px，否则 iOS 聚焦时会自动放大整个页面 */
-input,
-textarea,
-select {
-  font: inherit;
-  font-size: 16px;
-}
-
-/* 图标配色。图标内部用 class 而非 fill="var(...)"，因为 CSS 变量在 SVG
-   呈现属性里的支持度不如 CSS 类可靠。定义在全局是因为图标内容通过
-   innerHTML 注入，拿不到 CSS Module 的哈希类名。 */
-.ic-ink {
-  fill: var(--ic-ink);
-}
-.ic-peach {
-  fill: var(--ic-peach);
-}
-.ic-mint {
-  fill: var(--ic-mint);
-}
-.ic-butter {
-  fill: var(--ic-butter);
-}
-.ic-coral {
-  fill: var(--ic-coral);
-}
-.ic-paper {
-  fill: var(--ic-paper);
-}
-
-/* 描边构件：用于把手、提梁这类细长形状 —— 描边比"实心块挖洞"可靠，
-   不依赖填充规则，不会意外糊成一坨 */
-.ic-ink-stroke {
-  fill: none;
-  stroke: var(--ic-ink);
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* 界面构件类图标（返回箭头、关闭）保持单色描边，不参与多色装饰 */
-.ic-stroke {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* 用 dvh 而不是 vh：iOS 上 vh 不随地址栏收起而变化，会导致底部被裁掉 */
-.app-shell {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  overflow: hidden;
-}
-
-.app-main {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-top: var(--safe-t);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }

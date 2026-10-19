@@ -7,15 +7,22 @@ import styles from './DatePicker.module.css';
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
 
-/** 底部弹出的日期选择器：快捷选项 + 月历。不允许选未来日期。 */
+/**
+ * 底部弹出的日期选择器：快捷选项 + 月历。
+ *
+ * 默认只能往回选 —— 记账记的是已经发生的开销。待入账的「提醒我催款」是唯一的
+ * 例外，那是个未来的日子，所以有 allowFuture 开关；默认关闭，别的调用点行为不变。
+ */
 export function DatePicker({
   value,
   onPick,
   onClose,
+  allowFuture = false,
 }: {
   value: string;
   onPick: (dateKey: string) => void;
   onClose: () => void;
+  allowFuture?: boolean;
 }) {
   const [viewMonth, setViewMonth] = useState(() => {
     const [y, m] = value.split('-').map(Number);
@@ -23,11 +30,17 @@ export function DatePicker({
   });
 
   const today = todayKey();
-  const quick = [
-    { label: '今天', key: today },
-    { label: '昨天', key: dateKeyOffset(-1) },
-    { label: '前天', key: dateKeyOffset(-2) },
-  ];
+  const quick = allowFuture
+    ? [
+        { label: '一周后', key: dateKeyOffset(7) },
+        { label: '半个月后', key: dateKeyOffset(15) },
+        { label: '一个月后', key: dateKeyOffset(30) },
+      ]
+    : [
+        { label: '今天', key: today },
+        { label: '昨天', key: dateKeyOffset(-1) },
+        { label: '前天', key: dateKeyOffset(-2) },
+      ];
 
   const firstWeekday = new Date(viewMonth.year, viewMonth.month, 1).getDay();
   const daysInMonth = new Date(viewMonth.year, viewMonth.month + 1, 0).getDate();
@@ -44,8 +57,8 @@ export function DatePicker({
 
   // 不给选未来 —— 记账只会记已经发生的开销
   const now = new Date();
-  const atCurrentMonth =
-    viewMonth.year === now.getFullYear() && viewMonth.month === now.getMonth();
+  const atMonthLimit =
+    !allowFuture && viewMonth.year === now.getFullYear() && viewMonth.month === now.getMonth();
 
   const pick = (dateKey: string) => {
     onPick(dateKey);
@@ -80,7 +93,7 @@ export function DatePicker({
           <button
             className={styles.navBtn}
             onClick={() => shift(1)}
-            disabled={atCurrentMonth}
+            disabled={atMonthLimit}
             aria-label="下个月"
           >
             <Icon name="chevronRight" size={20} />
@@ -99,7 +112,7 @@ export function DatePicker({
           {Array.from({ length: daysInMonth }, (_, i) => {
             const day = i + 1;
             const key = toDateKey(new Date(viewMonth.year, viewMonth.month, day));
-            const isFuture = key > today;
+            const isFuture = !allowFuture && key > today;
             return (
               <button
                 key={key}

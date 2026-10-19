@@ -3,6 +3,8 @@ import type {
   BudgetRow,
   CategoryId,
   CategoryRow,
+  ReceivableId,
+  ReceivableRow,
   SettingRow,
   SnapshotRow,
   TransactionRow,
@@ -16,7 +18,7 @@ import type {
  *   3. 主键**永不变更**
  *   4. SCHEMA_VERSION 会嵌进每个导出文件；导入时拒绝更新版本、正向迁移旧版本
  */
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 /** v1 的 emoji → v2 的图标名。迁移和旧备份导入都用它。 */
 export const EMOJI_TO_ICON: Record<string, string> = {
@@ -41,6 +43,7 @@ export class PuppyDB extends Dexie {
   budgets!: Table<BudgetRow, string>;
   settings!: Table<SettingRow, string>;
   snapshots!: Table<SnapshotRow, string>;
+  receivables!: Table<ReceivableRow, ReceivableId>;
 
   constructor() {
     super('puppy-bill');
@@ -70,8 +73,16 @@ export class PuppyDB extends Dexie {
         }),
     );
 
+    // v3：新增 receivables（待入账）。只加表、不碰任何已有表，因此不需要 upgrade()
+    // 回填 —— Dexie 会为老库直接建出这张空表，原有数据一条都不动。
+    this.version(3).stores({
+      // status 和 remindDateKey 两列都非空，复合索引可正常使用（服务「哪些该催了」）。
+      // deletedAt 照旧不进索引 —— IndexedDB 索引不了 null，在 JS 里过滤。
+      receivables: 'id, status, remindDateKey, updatedAt, [status+remindDateKey]',
+    });
+
     // 下一次改动的模板 —— 不要动上面已发布的 version 块：
-    // this.version(3).stores({ transactions: '…原有索引…, newIndex' })
+    // this.version(4).stores({ transactions: '…原有索引…, newIndex' })
     //   .upgrade(tx => tx.table('transactions').toCollection()
     //     .modify(row => { row.newField ??= 默认值; }));
   }

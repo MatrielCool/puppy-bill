@@ -8,6 +8,8 @@ import { currentMonthKey, formatMonthLabel } from '../../lib/dates';
 import { Icon, type IconName } from '../../ui/Icon';
 import { BudgetSheet } from './BudgetSheet';
 import styles from './BudgetScreen.module.css';
+import { PageHeading } from '../../ui/PageHeading';
+import { PuppyScene } from '../../ui/PuppyScene';
 
 const RING_R = 74;
 const RING_C = 2 * Math.PI * RING_R;
@@ -50,16 +52,12 @@ export function BudgetScreen() {
 
   return (
     <div className={styles.wrap}>
-      <h1 className={styles.title}>预算</h1>
+      <PageHeading title="花钱有个数" eyebrow="A LITTLE ROOM TO SPEND" />
       <p className={styles.monthLabel}>{formatMonthLabel(monthKey)}</p>
 
       {total === null ? (
         <div className={styles.empty}>
-          <img
-            className={styles.emptyPuppy}
-            src={`${import.meta.env.BASE_URL}pwa-192x192.png`}
-            alt=""
-          />
+          <PuppyScene className={styles.emptyPuppy} />
           <p className={styles.emptyText}>
             还没有设置预算。
             <br />

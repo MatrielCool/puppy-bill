@@ -1,64 +1,12 @@
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 70;
-  background: rgb(0 0 0 / 32%);
-  animation: fade 0.18s ease;
-}
-
-@keyframes fade {
-  from {
-    opacity: 0;
-  }
-}
-
-.sheet {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  z-index: 71;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg);
-  animation: slideUp 0.26s cubic-bezier(0.32, 1.2, 0.6, 1);
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: calc(10px + var(--safe-t)) 12px 8px;
-  flex-shrink: 0;
-}
-
-.headerBtn {
-  padding: 8px 12px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink-2);
-  border-radius: var(--r-full);
-}
-
-.headerTitle {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.deleteBtn {
-  color: var(--danger);
-}
-
-.body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-}
+.backdrop { position:fixed; inset:0; z-index:70; background:rgb(38 40 32 / 28%); animation:fade .18s ease; }
+@keyframes fade { from { opacity:0; } }
+.sheet { position:fixed; left:0; right:0; bottom:0; top:0; width:100%; max-width:480px; margin-inline:auto; z-index:71; display:flex; flex-direction:column; background:var(--bg); animation:slideUp .24s ease; padding-bottom:var(--safe-b); }
+@keyframes slideUp { from { transform:translateY(100%); } }
+.header { display:grid; grid-template-columns:minmax(64px,1fr) minmax(0,2fr) minmax(64px,1fr); align-items:center; padding:calc(12px + var(--safe-t)) 12px 14px; flex-shrink:0; }
+.headerBtn { padding:10px 6px; font-size:14px; font-weight:500; color:var(--ink-2); border-radius:12px; white-space:nowrap; }
+.headerBtn:first-child { justify-self:start; }
+.headerBtn:last-child { justify-self:end; }
+.headerTitle { font-size:16px; font-weight:600; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.deleteBtn { color:var(--danger); }
+.body { flex:1; min-height:0; display:flex; flex-direction:column; overflow-y:auto; }
+@media (min-width:600px) { .sheet { top:24px; border-radius:26px 26px 0 0; box-shadow:var(--shadow-2); } }

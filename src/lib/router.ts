@@ -7,10 +7,10 @@ import { useSyncExternalStore } from 'react';
  * 而常见的 404.html 转发 hack 又会和 Service Worker 的 navigateFallback 相互干扰。
  * 哈希路由让每个页面都是同一个文档，零成本消除整类问题。
  *
- * 只有 4 个标签页、没有嵌套路由和数据加载，因此不需要 react-router。
+ * 只有 5 个标签页、没有嵌套路由和数据加载，因此不需要 react-router。
  */
 
-export type Route = '/' | '/list' | '/budget' | '/settings';
+export type Route = '/' | '/list' | '/pending' | '/budget' | '/settings';
 
 const subscribe = (onChange: () => void) => {
   window.addEventListener('hashchange', onChange);
@@ -28,7 +28,7 @@ export function navigate(to: Route): void {
   window.location.hash = to;
 }
 
-const ROUTES: readonly string[] = ['/', '/list', '/budget', '/settings'];
+const ROUTES: readonly string[] = ['/', '/list', '/pending', '/budget', '/settings'];
 
 function isRoute(value: string): value is Route {
   return ROUTES.includes(value);

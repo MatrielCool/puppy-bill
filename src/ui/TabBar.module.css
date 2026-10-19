@@ -1,46 +1,13 @@
-.bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  /* 底部留出 Home 指示条的高度，否则最后一行会被挡住 */
-  padding-bottom: var(--safe-b);
-  flex-shrink: 0;
-}
-
-.tab {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 7px 0 5px;
-  color: var(--ink-3);
-  transition: color 0.15s ease;
-}
-
-.tab[aria-current='page'] {
-  color: var(--brand-ink);
-}
-
-.tab svg {
-  transition:
-    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-    filter 0.18s ease,
-    opacity 0.18s ease;
-}
-
-/* 图标是多色的，没法靠改颜色表达选中态 —— 改为未选中时去饱和压暗，
-   选中时恢复满色并轻微放大 */
-.tab:not([aria-current='page']) svg {
-  filter: grayscale(0.85);
-  opacity: 0.5;
-}
-
-.tab[aria-current='page'] svg {
-  transform: translateY(-1px) scale(1.06);
-}
-
-.label {
-  font-size: 11px;
-  font-weight: 600;
-}
+.bar { display:grid; grid-template-columns:repeat(5,1fr); background:var(--surface); border-top:1px solid var(--border); padding:7px 8px calc(8px + var(--safe-b)); flex-shrink:0; }
+.tab { display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--ink-2); min-height:49px; }
+.iconWrap { position:relative; display:flex; align-items:center; justify-content:center; width:44px; height:30px; border-radius:12px; }
+.tab svg { width:23px; height:23px; --icon-accent:transparent; }
+.tab[aria-current='page'] { color:var(--ink); }
+.tab[aria-current='page'] .iconWrap { background:var(--brand-soft); }
+.tab[aria-current='page'] svg { --icon-accent:var(--brand); }
+.tab:nth-child(3)[aria-current='page'] .iconWrap { background:var(--rose); }
+.tab:nth-child(4)[aria-current='page'] .iconWrap { background:var(--sage); }
+.tab:nth-child(5)[aria-current='page'] .iconWrap { background:var(--lavender); }
+.label { font-size:10px; font-weight:500; letter-spacing:.02em; }
+.tab[aria-current='page'] .label { font-weight:600; }
+.badge { position:absolute; top:-4px; left:68%; min-width:15px; height:15px; padding:0 4px; border-radius:var(--r-full); background:var(--danger); color:var(--surface); font-family:var(--font-number); font-size:9px; font-weight:600; line-height:15px; text-align:center; box-shadow:0 0 0 2px var(--surface); }

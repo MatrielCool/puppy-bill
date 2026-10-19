@@ -48,6 +48,20 @@ export function formatDayHeader(dateKey: string): string {
   return `${d.getMonth() + 1}月${d.getDate()}日 ${WEEKDAYS[d.getDay()]}`;
 }
 
+/** 'YYYY-MM-DD' → '8月2日'。不带星期，用在本来就很挤的一行里 */
+export function formatShortDate(dateKey: string): string {
+  const d = fromDateKey(dateKey);
+  return `${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+/**
+ * 两个日期键相差多少个自然日（b - a）。
+ * 两端都锚在当天 12:00（fromDateKey 的约定），所以夏令时切换那天也不会算出 0.96 天。
+ */
+export function daysBetween(a: string, b: string): number {
+  return Math.round((fromDateKey(b).getTime() - fromDateKey(a).getTime()) / 86_400_000);
+}
+
 /** 'YYYY-MM' 前后移动 n 个月。用 Date 运算而非手算，自动处理跨年。 */
 export function shiftMonth(monthKey: string, delta: number): string {
   const [y, m] = monthKey.split('-').map(Number);

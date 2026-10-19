@@ -40,8 +40,8 @@
   padding: 5px 14px;
   border-radius: var(--r-full);
   background: var(--brand);
-  color: #fff;
-  font-weight: 700;
+  color: var(--on-brand);
+  font-weight: 600;
   font-size: 13px;
 }
 

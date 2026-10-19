@@ -40,17 +40,17 @@ export async function importBackup(text: string, mode: ImportMode): Promise<Impo
 
   const result: ImportResult = { added: 0, updated: 0, skipped: 0 };
 
-  await db.transaction('rw', [db.transactions, db.categories, db.budgets, db.settings], async () => {
+  const tables = [db.transactions, db.categories, db.budgets, db.settings, db.receivables];
+
+  await db.transaction('rw', tables, async () => {
     if (mode === 'replace') {
-      await Promise.all([
-        db.transactions.clear(),
-        db.categories.clear(),
-        db.budgets.clear(),
-        db.settings.clear(),
-      ]);
+      await Promise.all(tables.map((table) => table.clear()));
       await db.transactions.bulkAdd(file.data.transactions);
       await db.categories.bulkAdd(file.data.categories);
       await db.budgets.bulkAdd(file.data.budgets);
+      // settings 之前被清空却没写回，覆盖导入会丢掉「上次备份时间」等设置
+      await db.settings.bulkAdd(file.data.settings);
+      await db.receivables.bulkAdd(file.data.receivables);
       result.added = file.data.transactions.length;
       return;
     }
@@ -86,6 +86,16 @@ export async function importBackup(text: string, mode: ImportMode): Promise<Impo
       return !current || b.updatedAt > current.updatedAt;
     });
     if (budgetsToPut.length) await db.budgets.bulkPut(budgetsToPut);
+
+    // 待入账同 transactions：按 id upsert，冲突取 updatedAt 更大的一方，永不删除
+    const existingReceivables = new Map(
+      (await db.receivables.toArray()).map((r) => [r.id, r]),
+    );
+    const receivablesToPut = file.data.receivables.filter((r) => {
+      const current = existingReceivables.get(r.id);
+      return !current || r.updatedAt > current.updatedAt;
+    });
+    if (receivablesToPut.length) await db.receivables.bulkPut(receivablesToPut);
   });
 
   return result;

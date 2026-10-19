@@ -8,6 +8,7 @@ import { registerSW } from 'virtual:pwa-register';
  * 设置页的构建时间可以用来确认到底跑的是哪一版。
  */
 export function setupServiceWorker(): void {
+  if (import.meta.env.MODE === 'native') return;
   if (!('serviceWorker' in navigator)) return;
 
   registerSW({

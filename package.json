@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:ios": "npm run icons && tsc -b && vite build --mode native",
+    "ios:sync": "npm run build:ios && cap sync ios",
+    "ios:open": "cap open ios",
     "lint": "oxlint",
     "preview": "vite preview",
     "icons": "node scripts/gen-icons.mjs",
@@ -13,6 +16,11 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/ios": "^8.5.3",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/preferences": "^8.0.1",
     "clsx": "^2.1.1",
     "dexie": "^4.4.4",
     "dexie-react-hooks": "^4.4.0",
@@ -21,6 +29,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
     "@resvg/resvg-wasm": "^2.6.2",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^24.13.3",

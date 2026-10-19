@@ -3,8 +3,11 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import clsx from 'clsx';
 import { getSummary, listCategoriesByFrequency } from '../../db/queries';
 import { addTransaction, softDeleteTransaction, restoreTransaction } from '../../db/mutations';
+import { getDueSummary } from '../../db/receivables';
 import { formatCNY, formatCNYGrouped, parseInputToCents } from '../../lib/money';
 import { formatDayHeader, todayKey } from '../../lib/dates';
+import { navigate } from '../../lib/router';
+import { getSetting, setSetting, SETTING_PENDING_MUTED_ON } from '../../lib/settings';
 import { Icon, type IconName } from '../../ui/Icon';
 import { KindSegmented } from '../../ui/Segmented';
 import { DatePicker } from '../../ui/DatePicker';
@@ -13,6 +16,7 @@ import { useKeypad } from './useKeypadReducer';
 import { Keypad } from './Keypad';
 import { SuccessBurst } from './SuccessBurst';
 import styles from './RecordScreen.module.css';
+import { PageHeading } from '../../ui/PageHeading';
 
 const DRAFT_KEY = 'puppy-bill:draft';
 
@@ -24,6 +28,11 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
 
   const categories = useLiveQuery(() => listCategoriesByFrequency(state.kind), [state.kind]);
   const summary = useLiveQuery(() => getSummary(), []);
+
+  // 催款提醒只能长在这里：iOS 的 PWA 弹不了定时通知，而这一页是每天必开的。
+  const due = useLiveQuery(getDueSummary, [], { count: 0, cents: 0 });
+  const mutedOn = useLiveQuery(() => getSetting(SETTING_PENDING_MUTED_ON, ''), [], '');
+  const showDueBanner = due.count > 0 && mutedOn !== todayKey();
 
   const cents = parseInputToCents(state.input);
   const canSubmit = cents > 0 && state.categoryId !== null;
@@ -97,6 +106,8 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
     <div className={styles.screen}>
       {burstKey > 0 && <SuccessBurst key={burstKey} />}
 
+      <div className={styles.heading}><PageHeading title="记下这一笔" eyebrow="A LITTLE EVERY DAY" /></div>
+
       <div className={styles.topBar}>
         <KindSegmented value={state.kind} onChange={(kind) => dispatch({ type: 'setKind', kind })} />
       </div>
@@ -107,6 +118,22 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
         <span className={styles.summaryDot}>·</span>
         <span>本月 {formatCNYGrouped(summary?.monthExpenseCents ?? 0)}</span>
       </div>
+
+      {showDueBanner && (
+        <div className={styles.dueBanner}>
+          <button className={styles.dueBannerMain} onClick={() => navigate('/pending')}>
+            <Icon name="pending" size={18} />
+            有 {due.count} 笔款该催了 · 共 {formatCNYGrouped(due.cents)}
+          </button>
+          <button
+            className={styles.dueBannerClose}
+            aria-label="今天不再提醒"
+            onClick={() => void setSetting(SETTING_PENDING_MUTED_ON, todayKey())}
+          >
+            <Icon name="close" size={15} />
+          </button>
+        </div>
+      )}
 
       <div className={styles.amountRow}>
         <span className={clsx(styles.currency, state.kind === 'income' && styles.amountIncome)}>
@@ -130,6 +157,7 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
             key={c.id}
             className={clsx(styles.chip, state.categoryId === c.id && styles.chipOn)}
             onClick={() => dispatch({ type: 'setCategory', categoryId: c.id })}
+            aria-pressed={state.categoryId === c.id}
           >
             <Icon name={c.icon as IconName} size={32} className={styles.chipIcon} />
             <span className={styles.chipName}>{c.name}</span>
@@ -149,6 +177,7 @@ export function RecordScreen({ onToast }: { onToast: (toast: ToastData) => void 
           ref={noteRef}
           className={styles.noteInput}
           placeholder="备注（可不填）"
+          aria-label="备注"
           value={state.note}
           onChange={(e) => dispatch({ type: 'setNote', note: e.target.value })}
           enterKeyHint="done"

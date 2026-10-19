@@ -1,84 +1,81 @@
-/* 小狗账单设计令牌：暖色、圆润、亲和。
-   深浅色都通过同一组变量名切换，组件里永远不写死颜色。 */
-
+/* 柔彩日记：纸白 + 麦芽黄，粉、紫、绿承担分组与状态。 */
 :root {
-  /* 品牌 */
-  --brand: #f5a25d;
-  --brand-strong: #e0873c;
-  --brand-soft: #ffe3c6;
-  --brand-ink: #8a4b18;
-
-  /* 背景与表面 */
-  --bg: #fff8f0;
-  --surface: #ffffff;
-  --surface-2: #fff3e6;
-  --border: #f0e0cf;
-
-  /* 文字 */
-  --ink: #3b2a1e;
-  --ink-2: #6b5647;
-  --ink-3: #a8968a;
-
-  /* 语义色 */
-  --danger: #e0524f;
-  --ok: #3e9b62;
-  --warn: #e0982f;
-
-  /* 圆角与阴影 */
-  --r-sm: 10px;
-  --r-md: 16px;
-  --r-lg: 24px;
+  --brand: #e8c575;
+  --brand-strong: #d7b362;
+  --brand-soft: #f1e5c7;
+  --brand-ink: #53472c;
+  --on-brand: #414139;
+  --rose: #e8d2cb;
+  --lavender: #dcd5e7;
+  --sage: #ccd7c0;
+  --bg: #f5f3ee;
+  --surface: #fffefa;
+  --surface-2: #eeece5;
+  --border: #e4e1d8;
+  --ink: #414139;
+  --ink-2: #62635a;
+  --ink-3: #78796e;
+  --danger: #a75249;
+  --ok: #536d4e;
+  --warn: #88642b;
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
   --r-full: 999px;
-  --shadow-1: 0 1px 2px rgb(59 42 30 / 6%), 0 4px 12px rgb(59 42 30 / 6%);
-  --shadow-2: 0 2px 6px rgb(59 42 30 / 8%), 0 12px 28px rgb(59 42 30 / 10%);
-
-  /* 图标专用配色：暗色主体 + 亮色点缀的多色扁平风。
-     单独成组是因为图标的色值不该跟着文字/背景走 —— 它们要在任何底色上都保持辨识度。 */
-  --ic-ink: #4a4440;
-  --ic-peach: #ffc0a4;
-  --ic-mint: #5fd3a8;
-  --ic-butter: #ffd37e;
-  --ic-coral: #ff8e77;
-  --ic-paper: #fffaf4;
-
-  /* 安全区（刘海 / Home 指示条） */
+  --shadow-1: 0 2px 8px rgb(65 65 57 / 3%);
+  --shadow-2: 0 12px 40px rgb(65 65 57 / 12%);
+  --ic-ink: #414139;
+  --ic-peach: #e8d2cb;
+  --ic-mint: #ccd7c0;
+  --ic-butter: #e8c575;
+  --ic-coral: #d5a99f;
+  --ic-lavender: #dcd5e7;
+  --ic-paper: #fffefa;
+  --font-ui: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-number: 'Manrope', -apple-system, BlinkMacSystemFont, var(--font-ui);
+  --text-title: 25px;
+  --text-body: 15px;
+  --text-label: 13px;
+  --text-caption: 12px;
+  --weight-title: 600;
+  --weight-label: 500;
+  --page-gutter: 22px;
   --safe-t: env(safe-area-inset-top, 0px);
   --safe-b: env(safe-area-inset-bottom, 0px);
-
   color-scheme: light;
 }
-
 @media (prefers-color-scheme: dark) {
   :root {
-    --brand: #f0a468;
-    --brand-strong: #ffbe86;
-    --brand-soft: #4a3524;
-    --brand-ink: #ffd6ab;
-
-    --bg: #17120f;
-    --surface: #221a15;
-    --surface-2: #2c221b;
-    --border: #3a2d24;
-
-    --ink: #f5e9dd;
-    --ink-2: #c3b1a3;
-    --ink-3: #8b7a6d;
-
-    --danger: #f0736f;
-    --ok: #5cb87f;
-    --warn: #f0b155;
-
-    --shadow-1: 0 1px 2px rgb(0 0 0 / 30%), 0 4px 12px rgb(0 0 0 / 24%);
-    --shadow-2: 0 2px 6px rgb(0 0 0 / 34%), 0 12px 28px rgb(0 0 0 / 30%);
-
-    /* 深色模式下主体色提亮，点缀色略压暗以免在暗背景上刺眼 */
-    --ic-ink: #efe2d6;
-    --ic-peach: #e09a76;
-    --ic-mint: #4bb98f;
-    --ic-butter: #e0b45f;
-    --ic-coral: #e07059;
-    --ic-paper: #2c221b;
-
+    --brand: #c3a567;
+    --brand-strong: #d0b479;
+    --brand-soft: #494331;
+    --brand-ink: #e6cc91;
+    --on-brand: #292b26;
+    --rose: #51423e;
+    --lavender: #494451;
+    --sage: #414c3c;
+    --bg: #23251f;
+    --surface: #2c2f27;
+    --surface-2: #34382e;
+    --border: #42453b;
+    --ink: #eeeee4;
+    --ink-2: #c0c2b4;
+    --ink-3: #a1a591;
+    --danger: #e2a296;
+    --ok: #b4c9a6;
+    --warn: #d6ba7e;
+    --ic-ink: #e4e6da;
+    --ic-peach: #78605a;
+    --ic-mint: #657559;
+    --ic-butter: #a48c58;
+    --ic-coral: #9d7167;
+    --ic-lavender: #777084;
+    --ic-paper: #34382e;
+    --shadow-1: 0 2px 8px rgb(0 0 0 / 8%);
+    --shadow-2: 0 12px 40px rgb(0 0 0 / 25%);
     color-scheme: dark;
   }
+}
+@media (max-width: 360px) {
+  :root { --page-gutter: 16px; --text-title: 23px; }
 }

@@ -13,6 +13,10 @@ import { currentMonthKey } from '../../lib/dates';
 import { ReminderGuide } from './ReminderGuide';
 import type { ToastData } from '../../ui/Toast';
 import styles from './SettingsScreen.module.css';
+import { PageHeading } from '../../ui/PageHeading';
+import { Icon } from '../../ui/Icon';
+import { isNativeIOS } from '../../native/platform';
+import { NativeReminderSettings } from './NativeReminderSettings';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -30,6 +34,7 @@ function detectStandalone(): boolean {
 }
 
 export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => void }) {
+  const native = isNativeIOS();
   const [info, setInfo] = useState<StorageInfo | null>(null);
   const [lastBackupAt, setLastBackupAt] = useState<number | null>(null);
   const [badgeState, setBadgeState] = useState(badgePermissionState);
@@ -140,7 +145,11 @@ export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => voi
 
   return (
     <div className={styles.wrap}>
-      <h1 className={styles.title}>我的</h1>
+      <PageHeading title="我的小角落" eyebrow="MAKE YOURSELF AT HOME" />
+      <div className={styles.profileCard}>
+        <span className={styles.profileDog}><Icon name="profile" size={52} /></span>
+        <div><p className={styles.profileTitle}>小狗陪你，好好记账</p><p className={styles.profileCaption}>已经收好 <b>{txCount ?? 0}</b> 笔生活日常</p></div>
+      </div>
 
       {needsBackup && (
         <div className={clsx(styles.banner, urgent && styles.bannerUrgent)}>
@@ -159,37 +168,41 @@ export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => voi
         <p className={styles.sectionTitle}>备份与恢复</p>
         <div className={styles.card}>
           <button className={clsx(styles.row, styles.rowBtn)} onClick={() => handleExport('json')}>
+            <span className={styles.rowIcon}><Icon name="export" size={23} /></span>
             <span className={styles.rowMain}>
               <span className={styles.rowLabel}>导出备份</span>
               <span className={styles.rowSub}>
                 {lastBackupAt ? `上次 ${daysSinceBackup} 天前` : '从未备份'} · 共 {txCount ?? 0} 笔
               </span>
             </span>
-            <span className={styles.chevron}>›</span>
+            <Icon className={styles.chevron} name="chevronRight" size={17} />
           </button>
 
           <button className={clsx(styles.row, styles.rowBtn)} onClick={() => handleExport('csv')}>
+            <span className={styles.rowIcon}><Icon name="list" size={23} /></span>
             <span className={styles.rowMain}>
               <span className={styles.rowLabel}>导出 CSV</span>
               <span className={styles.rowSub}>给 Excel 看，不能用来恢复</span>
             </span>
-            <span className={styles.chevron}>›</span>
+            <Icon className={styles.chevron} name="chevronRight" size={17} />
           </button>
 
           <button className={clsx(styles.row, styles.rowBtn)} onClick={() => startImport('merge')}>
+            <span className={styles.rowIcon}><Icon name="import" size={23} /></span>
             <span className={styles.rowMain}>
               <span className={styles.rowLabel}>合并导入</span>
               <span className={styles.rowSub}>只补充和更新，不删除现有账目</span>
             </span>
-            <span className={styles.chevron}>›</span>
+            <Icon className={styles.chevron} name="chevronRight" size={17} />
           </button>
 
           <button className={clsx(styles.row, styles.rowBtn)} onClick={() => startImport('replace')}>
+            <span className={styles.rowIcon}><Icon name="replace" size={23} /></span>
             <span className={styles.rowMain}>
               <span className={clsx(styles.rowLabel, styles.dangerText)}>覆盖导入</span>
               <span className={styles.rowSub}>清空后用备份替换（导入前自动留快照）</span>
             </span>
-            <span className={styles.chevron}>›</span>
+            <Icon className={styles.chevron} name="chevronRight" size={17} />
           </button>
         </div>
         <p className={styles.note}>
@@ -198,15 +211,16 @@ export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => voi
         </p>
       </div>
 
-      <div className={styles.section}>
+      {native ? <NativeReminderSettings onToast={onToast} /> : <div className={styles.section}>
         <p className={styles.sectionTitle}>提醒</p>
         <div className={styles.card}>
           <button className={clsx(styles.row, styles.rowBtn)} onClick={() => setGuideOpen(true)}>
+            <span className={styles.rowIcon}><Icon name="bell" size={23} /></span>
             <span className={styles.rowMain}>
               <span className={styles.rowLabel}>设置每日提醒</span>
               <span className={styles.rowSub}>用 iPhone 快捷指令，设置一次即可</span>
             </span>
-            <span className={styles.chevron}>›</span>
+            <Icon className={styles.chevron} name="chevronRight" size={17} />
           </button>
 
           {badgeState !== 'unsupported' && (
@@ -218,7 +232,7 @@ export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => voi
               <span className={styles.rowMain}>
                 <span className={styles.rowLabel}>图标显示超支提醒</span>
                 <span className={styles.rowSub}>
-                  小狗账单不会推送通知（它做不到），权限只用于画角标
+                  网页版的此项权限仅用于显示超支角标
                 </span>
               </span>
               <span
@@ -237,7 +251,7 @@ export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => voi
           iOS 不允许网页 App 自己定时弹通知，所以每日提醒要借助系统的「快捷指令」。
           图标角标只反映你上次关闭 app 时的超支状态。
         </p>
-      </div>
+      </div>}
 
       <div className={styles.section}>
         <p className={styles.sectionTitle}>运行状态</p>
@@ -245,16 +259,21 @@ export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => voi
           <div className={styles.row}>
             <span className={styles.rowLabel}>启动方式</span>
             <span className={clsx(styles.value, info?.standalone ? styles.ok : styles.warn)}>
-              {info?.standalone ? '主屏 App ✓' : '浏览器标签页'}
+              {native ? 'iOS App' : info?.standalone ? '主屏 App ✓' : '浏览器标签页'}
             </span>
           </div>
           <div className={styles.row}>
             <span className={styles.rowLabel}>离线支持</span>
             <span className={clsx(styles.value, info?.swState === '已激活' && styles.ok)}>
-              {info?.swState ?? '检测中'}
+              {native ? '资源随 App 安装' : info?.swState ?? '检测中'}
             </span>
           </div>
-          <button className={clsx(styles.row, styles.rowBtn)} onClick={handlePersist}>
+          {native ? <div className={styles.row}>
+            <span className={styles.rowMain}>
+              <span className={styles.rowLabel}>账本保存在本机</span>
+              <span className={styles.rowSub}>当前为验证版，请保留独立的 JSON 备份</span>
+            </span>
+          </div> : <button className={clsx(styles.row, styles.rowBtn)} onClick={handlePersist}>
             <span className={styles.rowMain}>
               <span className={styles.rowLabel}>存储持久化</span>
               <span className={styles.rowSub}>
@@ -264,7 +283,7 @@ export function SettingsScreen({ onToast }: { onToast: (toast: ToastData) => voi
             <span className={clsx(styles.value, info?.persisted ? styles.ok : styles.warn)}>
               {info?.persisted ? '已锁定 ✓' : '未锁定'}
             </span>
-          </button>
+          </button>}
           <div className={styles.row}>
             <span className={styles.rowLabel}>存储用量</span>
             <span className={styles.value}>

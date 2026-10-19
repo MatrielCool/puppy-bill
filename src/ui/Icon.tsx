@@ -1,12 +1,14 @@
 import { ICON_PATHS } from './iconPaths.mjs';
+import { PUPPY_PORTRAIT } from './puppyArtwork.mjs';
 
 export type IconName = keyof typeof ICON_PATHS;
 
 /**
- * 多色扁平图标。
+ * 柔彩细描边图标。
  *
  * 路径来自 iconPaths.mjs（同一份数据也供 scripts/preview-icons.mjs 渲染成图检查）。
- * 配色由图标内部的 .ic-* 类驱动，见 global.css —— 因此深浅色主题会自动跟随。
+ * 24px 网格、1.6px 圆头描边、单一柔彩填充，配色通过 .ic-* 类跟随主题。
+ * 小狗品牌图形独立使用奶油色与灰褐色；40px 以上显示头像细节版。
  *
  * 内容是静态的作者自有字符串，不含任何用户输入，innerHTML 在此是安全的。
  */
@@ -28,7 +30,11 @@ export function Icon({
       aria-hidden="true"
       // 兜底到通用图标：分类的 icon 在数据库里是普通字符串，
       // 万一对不上（如旧备份、手改数据），宁可画个标签也不要空白格子
-      dangerouslySetInnerHTML={{ __html: ICON_PATHS[name] ?? ICON_PATHS.other }}
+      dangerouslySetInnerHTML={{
+        __html: (name === 'profile' || name === 'dog') && size >= 40
+          ? PUPPY_PORTRAIT
+          : ICON_PATHS[name] ?? ICON_PATHS.other,
+      }}
     />
   );
 }

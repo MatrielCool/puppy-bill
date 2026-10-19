@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小狗账单 · 柔彩日记设计样稿</title>
+<link rel="stylesheet" href="./preview.css">
+</head>
+<body>
+  <header class="board-heading"><div><span class="eyebrow">PUPPY BILL · VISUAL STUDY 02</span><h1>柔彩日记<span>小狗账单</span></h1></div><span class="preview-label">设计预览 · 示例数据</span></header>
+  <main class="design-board">
+    <section class="screen-study" aria-labelledby="overview-title"><h2 id="overview-title">账单 <span>柔和色块，清楚记账</span></h2>
+      <div class="phone overview">
+        <div class="status"><b>9:41</b><span aria-hidden="true">▰ ▰ ▱</span></div>
+        <div class="phone-content">
+          <header class="app-header"><div><p class="greeting">今天也有好好生活</p><h3>我的小账本</h3></div><div class="puppy-avatar"><svg class="icon"><use href="./icons.svg#dog"/></svg></div></header>
+          <div class="month"><span>2026 年 10 月</span><span class="month-caption">慢慢记，慢慢攒</span></div>
+          <section class="summary-card" aria-label="本月支出 2480.50 元"><div class="summary-text"><span>本月支出</span><div class="hero-number"><small>¥</small>2,480<span>.50</span></div></div><img src="./garden.svg" alt="小狗在柔和的阳光下散步" class="garden"></section>
+          <div class="mini-cards"><div class="rose"><span><svg class="small-icon"><use href="./icons.svg#salary"/></svg>本月收入</span><strong>¥6,800<span>.00</span></strong></div><div class="lavender"><span><svg class="small-icon"><use href="./icons.svg#budget"/></svg>本月结余</span><strong>¥4,319<span>.50</span></strong></div></div>
+          <div class="section-heading"><h4>今天的账单</h4><span>10 月 19 日</span></div>
+          <div class="transactions">
+            <div class="transaction"><span class="category-icon butter"><svg class="icon"><use href="./icons.svg#food"/></svg></span><div><b>好好吃饭</b><p>餐饮 · 午饭</p></div><strong>−32<span>.00</span></strong></div>
+            <div class="transaction"><span class="category-icon sage"><svg class="icon"><use href="./icons.svg#transit"/></svg></span><div><b>出门走走</b><p>交通 · 地铁</p></div><strong>−6<span>.00</span></strong></div>
+            <div class="transaction"><span class="category-icon rose"><svg class="icon"><use href="./icons.svg#coffee"/></svg></span><div><b>下午的一杯</b><p>餐饮 · 咖啡</p></div><strong>−18<span>.00</span></strong></div>
+          </div>
+        </div>
+        <nav class="app-nav" aria-label="账单页导航"><button type="button" data-demo-nav="record"><svg class="icon"><use href="./icons.svg#plus"/></svg><span>记一笔</span></button><button type="button" class="active" aria-current="page"><svg class="icon"><use href="./icons.svg#receipt"/></svg><span>账单</span></button><button type="button" data-demo-nav="pending"><svg class="icon"><use href="./icons.svg#pending"/></svg><span>待入账</span></button><button type="button" data-demo-nav="budget"><svg class="icon"><use href="./icons.svg#budget"/></svg><span>预算</span></button><button type="button" data-demo-nav="profile"><svg class="icon"><use href="./icons.svg#dog"/></svg><span>我的</span></button></nav>
+        <div class="home-indicator"></div>
+      </div>
+    </section>
+    <section class="screen-study" aria-labelledby="record-title"><h2 id="record-title">记一笔 <span>图标与界面一起设计</span></h2>
+      <div class="phone record" id="record-phone">
+        <div class="status"><b>9:41</b><span aria-hidden="true">▰ ▰ ▱</span></div>
+        <div class="phone-content">
+          <header class="app-header"><h3>记下这一笔</h3><svg class="icon header-paw"><use href="./icons.svg#pet"/></svg></header>
+          <div class="kind-control" aria-label="收支类型"><button type="button" aria-pressed="true" data-kind="expense">支出</button><button type="button" aria-pressed="false" data-kind="income">收入</button></div>
+          <div class="amount-entry"><div class="amount-caption" id="amount-caption">今天花了多少？</div><div class="entered-number"><small>¥</small><output id="amount">32.00</output><span class="input-caret"></span></div></div>
+          <div class="category-picker" aria-label="账目分类" id="category-picker"></div>
+          <div class="meta"><button type="button" id="date-button"><svg class="small-icon"><use href="./icons.svg#calendar"/></svg>今天</button><input type="text" aria-label="备注" placeholder="加一句备注…" maxlength="60"></div>
+          <div class="keypad" aria-label="金额键盘"><button type="button" data-key="1">1</button><button type="button" data-key="2">2</button><button type="button" data-key="3">3</button><button type="button" data-key="delete" class="key-function" aria-label="退格"><svg class="icon"><use href="./icons.svg#backspace"/></svg></button><button type="button" data-key="4">4</button><button type="button" data-key="5">5</button><button type="button" data-key="6">6</button><button type="button" id="save-demo" class="key-save"><svg class="icon"><use href="./icons.svg#pet"/></svg><span>记好了</span></button><button type="button" data-key="7">7</button><button type="button" data-key="8">8</button><button type="button" data-key="9">9</button><button type="button" data-key=".">.</button><button type="button" data-key="0">0</button><button type="button" data-key="00">00</button></div>
+        </div>
+        <nav class="app-nav" aria-label="记账页导航"><button type="button" class="active" aria-current="page"><svg class="icon"><use href="./icons.svg#plus"/></svg><span>记一笔</span></button><button type="button" data-demo-nav="overview"><svg class="icon"><use href="./icons.svg#receipt"/></svg><span>账单</span></button><button type="button" data-demo-nav="pending"><svg class="icon"><use href="./icons.svg#pending"/></svg><span>待入账</span></button><button type="button" data-demo-nav="budget"><svg class="icon"><use href="./icons.svg#budget"/></svg><span>预算</span></button><button type="button" data-demo-nav="profile"><svg class="icon"><use href="./icons.svg#dog"/></svg><span>我的</span></button></nav>
+        <div class="home-indicator"></div>
+        <div class="demo-toast" id="demo-toast" role="status" aria-live="polite" hidden></div>
+      </div>
+    </section>
+    <aside class="system-study" aria-label="配色与图标规范">
+      <div class="system-heading"><span class="eyebrow">THE LITTLE DETAILS</span><h2>有颜色，也有呼吸感。</h2><p>暖灰底色 / 柔和彩块 / 圆润细线</p></div>
+      <div class="palette" aria-label="配色"><div><i style="background:#F5F3EE"></i><span>暖灰白</span><code>#F5F3EE</code></div><div><i style="background:#E8C575"></i><span>麦芽黄</span><code>#E8C575</code></div><div><i style="background:#E8D2CB"></i><span>灰玫瑰</span><code>#E8D2CB</code></div><div><i style="background:#DCD5E7"></i><span>雾薰衣草</span><code>#DCD5E7</code></div><div><i style="background:#CCD7C0"></i><span>鼠尾草</span><code>#CCD7C0</code></div><div><i style="background:#414139"></i><span>深棕灰</span><code>#414139</code></div></div>
+      <div class="icon-heading"><h3>一套图标，一种语气</h3><div class="size-picker" aria-label="图标预览大小"><button type="button" data-size="24" aria-pressed="true">24</button><button type="button" data-size="32" aria-pressed="false">32</button><button type="button" data-size="48" aria-pressed="false">48</button></div></div>
+      <div class="icon-grid" id="icon-grid"></div>
+      <p class="spec-note">24 × 24 网格 · 1.6px 圆头描边<br>深棕灰轮廓 + 单色填充，统一视觉重量</p>
+      <div class="states"><div><span class="state-icon"><svg class="icon"><use href="./icons.svg#receipt"/></svg></span><small>未选中</small></div><div><span class="state-icon selected"><svg class="icon"><use href="./icons.svg#receipt"/></svg></span><small>选中</small></div><p>用底色和轮廓强调选中，<br>不再把图标压成灰色。</p></div>
+    </aside>
+  </main>
+  <script src="./preview.js"></script>
+</body>
+</html>

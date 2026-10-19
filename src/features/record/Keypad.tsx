@@ -43,7 +43,8 @@ export function Keypad({
         disabled={!canSubmit}
         onClick={onSubmit}
       >
-        {submitLabel}
+        <Icon name="pet" size={26} />
+        <span>{submitLabel}</span>
       </button>
 
       {['7', '8', '9'].map((d) => (

@@ -47,6 +47,24 @@ const budgetSchema = z.object({
   updatedAt: z.number(),
 });
 
+const receivableSchema = z.object({
+  id: z.string().min(1),
+  title: z.string(),
+  projectCents: z.number().int().nonnegative(),
+  reimburseCents: z.number().int().nonnegative(),
+  projectTxId: z.string().nullable(),
+  reimburseTxId: z.string().nullable(),
+  contactName: z.string(),
+  contactInfo: z.string(),
+  remindDateKey: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  startDateKey: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  note: z.string(),
+  status: z.enum(['open', 'settled']),
+  createdAt: z.number(),
+  updatedAt: z.number(),
+  deletedAt: z.number().nullable(),
+});
+
 const settingSchema = z.object({
   key: z.string(),
   value: z.unknown(),
@@ -65,12 +83,16 @@ export const backupSchema = z.object({
     transactions: z.number().int().nonnegative(),
     categories: z.number().int().nonnegative(),
     budgets: z.number().int().nonnegative(),
+    // schema v3 才有的表。老备份里没有这两个字段，默认成 0 / []，
+    // 长度自然相符，下面的截断校验照样通过 —— 旧备份仍然导得进来。
+    receivables: z.number().int().nonnegative().default(0),
   }),
   data: z.object({
     transactions: z.array(txSchema),
     categories: z.array(categorySchema),
     budgets: z.array(budgetSchema),
     settings: z.array(settingSchema).default([]),
+    receivables: z.array(receivableSchema).default([]),
   }),
 });
 
@@ -110,8 +132,9 @@ export function parseBackup(text: string): BackupFile {
     transactions: file.data.transactions.length,
     categories: file.data.categories.length,
     budgets: file.data.budgets.length,
+    receivables: file.data.receivables.length,
   };
-  for (const key of ['transactions', 'categories', 'budgets'] as const) {
+  for (const key of ['transactions', 'categories', 'budgets', 'receivables'] as const) {
     if (file.counts[key] !== actual[key]) {
       throw new BackupError(
         `备份文件不完整：${key} 应有 ${file.counts[key]} 条，实际只有 ${actual[key]} 条。文件可能在传输中被截断了。`,

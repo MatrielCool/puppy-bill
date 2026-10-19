@@ -4,12 +4,12 @@ import styles from './SuccessBurst.module.css';
 /** 记账成功时的爪印盖章 + 汪 + 纸屑。~620ms，不阻塞下一笔录入。 */
 
 const DOTS = [
-  { dx: '-72px', dy: '-56px', color: '#F5A25D' },
-  { dx: '68px', dy: '-64px', color: '#FF8FA3' },
-  { dx: '-84px', dy: '32px', color: '#FFC183' },
-  { dx: '80px', dy: '40px', color: '#7BC9A0' },
-  { dx: '-40px', dy: '-84px', color: '#FFD98E' },
-  { dx: '44px', dy: '76px', color: '#F09148' },
+  { dx: '-72px', dy: '-56px', color: 'var(--brand)' },
+  { dx: '68px', dy: '-64px', color: 'var(--rose)' },
+  { dx: '-84px', dy: '32px', color: 'var(--lavender)' },
+  { dx: '80px', dy: '40px', color: 'var(--sage)' },
+  { dx: '-40px', dy: '-84px', color: 'var(--brand-soft)' },
+  { dx: '44px', dy: '76px', color: 'var(--ic-coral)' },
 ];
 
 export function SuccessBurst() {

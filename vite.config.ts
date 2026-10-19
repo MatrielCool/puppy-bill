@@ -14,8 +14,9 @@ import { VitePWA } from 'vite-plugin-pwa';
  */
 const BASE = '/puppy-bill/';
 
-export default defineConfig({
-  base: BASE,
+export default defineConfig(({ mode }) => ({
+  base: mode === 'native' ? '/' : BASE,
+  build: { outDir: mode === 'native' ? 'dist-native' : 'dist' },
   // 注入构建时间，设置页显示它 —— 手机上确认"我到底跑的是不是刚推上去的那一版"
   define: {
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
@@ -23,6 +24,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      disable: mode === 'native',
       registerType: 'autoUpdate',
       injectRegister: null, // 在 src/registerSW.ts 里手动注册，以便控制更新时机
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
@@ -37,8 +39,8 @@ export default defineConfig({
         scope: BASE,
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#FFF8F0',
-        theme_color: '#F5A25D',
+        background_color: '#F5F3EE',
+        theme_color: '#F5F3EE',
         icons: [
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
@@ -60,4 +62,4 @@ export default defineConfig({
       devOptions: { enabled: false },
     }),
   ],
-});
+}));

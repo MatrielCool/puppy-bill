@@ -1,168 +1,52 @@
-/**
- * 图标路径的唯一来源。
- *
- * 风格：多色扁平填充 —— 圆润厚实的色块，暗色主体配亮色点缀，配合小狗账单的可爱调性。
- * 视框统一 24×24。
- *
- * 配色不写死，走 global.css 里的 .ic-* 类（映射到 tokens.css 的 --ic-* 变量），
- * 这样深浅色主题能自动切换。用 class 而非 fill="var(...)" 是因为后者在
- * SVG 呈现属性里的支持度不如 CSS 类可靠。
- *
- * 用 .mjs 而非 .tsx，是为了让 Icon 组件和 scripts/preview-icons.mjs 共用同一份数据 ——
- * 手写路径极易画歪，而 Windows 上连不了 Safari 调试，必须能渲染成图肉眼检查。
- */
+import { PUPPY_ICON } from './puppyArtwork.mjs';
 
-/** @type {Record<string, string>} */
+/** Original soft-journal icons. 24px grid, 1.6px rounded strokes; palette lives in tokens.css. */
 export const ICON_PATHS = {
-  // ── 底部标签 ──
-  record: [
-    '<circle cx="12" cy="12" r="9.6" class="ic-peach"/>',
-    '<rect x="10.4" y="5.8" width="3.2" height="12.4" rx="1.6" class="ic-ink"/>',
-    '<rect x="5.8" y="10.4" width="12.4" height="3.2" rx="1.6" class="ic-ink"/>',
-  ].join(''),
-  list: [
-    '<rect x="3.4" y="4.2" width="17.2" height="17.4" rx="3.4" class="ic-peach"/>',
-    '<rect x="8.4" y="1.8" width="7.2" height="4.6" rx="2.3" class="ic-mint"/>',
-    '<rect x="7" y="9.6" width="10" height="2.4" rx="1.2" class="ic-ink"/>',
-    '<rect x="7" y="14.2" width="6.6" height="2.4" rx="1.2" class="ic-ink"/>',
-  ].join(''),
-  budget: [
-    '<circle cx="12" cy="12" r="9.8" class="ic-ink"/>',
-    '<circle cx="12" cy="12" r="6.4" class="ic-peach"/>',
-    '<circle cx="12" cy="12" r="3" class="ic-mint"/>',
-  ].join(''),
-  profile: [
-    // 小狗脸：垂耳在头后，圆脸配大眼和口鼻
-    '<ellipse cx="5.2" cy="10.4" rx="3.1" ry="4.6" class="ic-ink" transform="rotate(-16 5.2 10.4)"/>',
-    '<ellipse cx="18.8" cy="10.4" rx="3.1" ry="4.6" class="ic-ink" transform="rotate(16 18.8 10.4)"/>',
-    '<circle cx="12" cy="12.2" r="7.6" class="ic-peach"/>',
-    '<circle cx="9.4" cy="11" r="1.35" class="ic-ink"/>',
-    '<circle cx="14.6" cy="11" r="1.35" class="ic-ink"/>',
-    '<ellipse cx="12" cy="14.6" rx="2.1" ry="1.55" class="ic-ink"/>',
-  ].join(''),
-
-  // ── 支出分类 ──
-  food: [
-    // 面碗：暗色碗身 + 亮色汤面 + 薄荷热气
-    '<path class="ic-mint" d="M9.3 2.6a1.15 1.15 0 0 1 1.6 1.6c-.75.9-.75 1.6 0 2.5a1.15 1.15 0 0 1-1.6 1.6c-1.6-1.8-1.6-3.9 0-5.7Z"/>',
-    '<path class="ic-mint" d="M14.3 2.6a1.15 1.15 0 0 1 1.6 1.6c-.75.9-.75 1.6 0 2.5a1.15 1.15 0 0 1-1.6 1.6c-1.6-1.8-1.6-3.9 0-5.7Z"/>',
-    '<path class="ic-ink" d="M2.3 10.1h19.4a1.2 1.2 0 0 1 1.2 1.35A11 11 0 0 1 12 21.3 11 11 0 0 1 1.1 11.45 1.2 1.2 0 0 1 2.3 10.1Z"/>',
-    '<path class="ic-peach" d="M4.4 12.5h15.2A7.9 7.9 0 0 1 12 18.7a7.9 7.9 0 0 1-7.6-6.2Z"/>',
-    '<rect x="4.6" y="21" width="14.8" height="2.3" rx="1.15" class="ic-ink"/>',
-  ].join(''),
-  transit: [
-    // 公交车：车身占满视框，车轮明确探出车底
-    '<rect x="2.6" y="2" width="18.8" height="16.4" rx="3.8" class="ic-peach"/>',
-    '<rect x="5.4" y="5.2" width="13.2" height="6" rx="2.1" class="ic-ink"/>',
-    '<circle cx="7.4" cy="14.9" r="1.8" class="ic-mint"/>',
-    '<circle cx="16.6" cy="14.9" r="1.8" class="ic-mint"/>',
-    '<rect x="4.8" y="17.4" width="3.8" height="4.6" rx="1.9" class="ic-ink"/>',
-    '<rect x="15.4" y="17.4" width="3.8" height="4.6" rx="1.9" class="ic-ink"/>',
-  ].join(''),
-  shopping: [
-    // 购物袋。把手用描边而非实心挖洞（实心块的镂空依赖填充规则，易糊成一坨），
-    // 且必须明显窄于袋身 —— 把手一旦和袋子等宽，整体就读成一把挂锁。
-    '<path class="ic-ink-stroke" d="M9.4 9.8V6.6a2.6 2.6 0 0 1 5.2 0v3.2"/>',
-    '<path class="ic-peach" d="M3.8 8.8h16.4a1.5 1.5 0 0 1 1.49 1.67l-1.05 9.3A2.9 2.9 0 0 1 17.76 22.3H6.24a2.9 2.9 0 0 1-2.88-2.53l-1.05-9.3A1.5 1.5 0 0 1 3.8 8.8Z"/>',
-    '<circle cx="12" cy="15.2" r="1.9" class="ic-mint"/>',
-  ].join(''),
-  home: [
-    // 房子：屋顶做成实心三角并出檐，压在墙体上方（细线屋顶显得单薄）
-    '<path class="ic-peach" d="M4.6 10.4h14.8v9a2.2 2.2 0 0 1-2.2 2.2H6.8a2.2 2.2 0 0 1-2.2-2.2Z"/>',
-    '<path class="ic-ink" d="M11 2.35a1.6 1.6 0 0 1 2 0l9.3 7.15a1.5 1.5 0 0 1-.92 2.7H2.62a1.5 1.5 0 0 1-.92-2.7Z"/>',
-    '<rect x="9.8" y="14.6" width="4.4" height="7" rx="2.2" class="ic-mint"/>',
-  ].join(''),
-  fun: [
-    // 游戏手柄
-    '<path class="ic-peach" d="M7.6 6.4h8.8a5.6 5.6 0 0 1 5.6 5.6v1.6a3.8 3.8 0 0 1-6.9 2.2l-1-1.5H9.9l-1 1.5A3.8 3.8 0 0 1 2 13.6V12a5.6 5.6 0 0 1 5.6-5.6Z"/>',
-    '<rect x="5.8" y="9.9" width="4.4" height="2" rx="1" class="ic-ink"/>',
-    '<rect x="7" y="8.7" width="2" height="4.4" rx="1" class="ic-ink"/>',
-    '<circle cx="16.3" cy="10.4" r="1.4" class="ic-mint"/>',
-    '<circle cx="18.4" cy="12.6" r="1.4" class="ic-ink"/>',
-  ].join(''),
-  health: [
-    // 药箱 + 十字
-    '<path class="ic-ink" d="M9.4 2.4h5.2a2.2 2.2 0 0 1 2.2 2.2v2.2h-2.9V5.3H10.1v1.5H7.2V4.6a2.2 2.2 0 0 1 2.2-2.2Z"/>',
-    '<rect x="2.4" y="6.4" width="19.2" height="15.2" rx="3.4" class="ic-peach"/>',
-    '<rect x="10.4" y="9.9" width="3.2" height="8.2" rx="1.6" class="ic-ink"/>',
-    '<rect x="7.9" y="12.4" width="8.2" height="3.2" rx="1.6" class="ic-ink"/>',
-  ].join(''),
-  study: [
-    // 翻开的书：暗色封面 + 亮色书页 + 薄荷书签
-    '<path class="ic-ink" d="M3.2 4.1c3.4-.3 6.4.4 8.8 2.2v14.4c-2.4-1.8-5.4-2.5-8.8-2.2a1.3 1.3 0 0 1-1.2-1.3V5.4a1.3 1.3 0 0 1 1.2-1.3Z"/>',
-    '<path class="ic-ink" d="M20.8 4.1c-3.4-.3-6.4.4-8.8 2.2v14.4c2.4-1.8 5.4-2.5 8.8-2.2A1.3 1.3 0 0 0 22 17.2V5.4a1.3 1.3 0 0 0-1.2-1.3Z"/>',
-    '<path class="ic-peach" d="M4.4 6.5c2.4 0 4.6.6 6.4 1.8v10.3c-1.8-1.2-4-1.8-6.4-1.8Z"/>',
-    '<path class="ic-peach" d="M19.6 6.5c-2.4 0-4.6.6-6.4 1.8v10.3c1.8-1.2 4-1.8 6.4-1.8Z"/>',
-    '<rect x="16.4" y="2.2" width="2.8" height="6.4" rx="1.4" class="ic-mint"/>',
-  ].join(''),
-  social: [
-    // 礼物盒：蝴蝶结用两个实心椭圆探出盒盖，比描线的结更清楚
-    '<ellipse cx="8.5" cy="5.4" rx="3.4" ry="2.7" class="ic-mint"/>',
-    '<ellipse cx="15.5" cy="5.4" rx="3.4" ry="2.7" class="ic-mint"/>',
-    '<rect x="2.4" y="7.2" width="19.2" height="5" rx="1.7" class="ic-ink"/>',
-    '<path class="ic-peach" d="M4.2 12.6h15.6v7.1a2 2 0 0 1-2 2H6.2a2 2 0 0 1-2-2Z"/>',
-    '<rect x="10.4" y="7.2" width="3.2" height="14.5" rx="1.1" class="ic-ink"/>',
-  ].join(''),
-  pet: [
-    // 爪印：暗色脚趾 + 亮色肉垫
-    '<ellipse cx="6.1" cy="8.9" rx="2.35" ry="3.05" class="ic-ink" transform="rotate(-18 6.1 8.9)"/>',
-    '<ellipse cx="11.1" cy="6.6" rx="2.3" ry="3.15" class="ic-ink"/>',
-    '<ellipse cx="16.4" cy="7.7" rx="2.3" ry="3.1" class="ic-ink" transform="rotate(14 16.4 7.7)"/>',
-    '<ellipse cx="20.5" cy="12.1" rx="2.1" ry="2.7" class="ic-ink" transform="rotate(30 20.5 12.1)"/>',
-    '<path class="ic-peach" d="M11.4 11.9c3.2 0 5.9 2.4 5.9 5.2 0 2.4-1.9 4-4.2 4-.75 0-1.25-.25-1.7-.25s-.95.25-1.7.25c-2.3 0-4.2-1.6-4.2-4 0-2.8 2.7-5.2 5.9-5.2Z"/>',
-  ].join(''),
-  other: [
-    // 标签
-    '<path class="ic-peach" d="M10.9 2.6h8.3A2.2 2.2 0 0 1 21.4 4.8v8.3a2.6 2.6 0 0 1-.76 1.84l-6.7 6.7a2.2 2.2 0 0 1-3.11 0l-7.47-7.47a2.2 2.2 0 0 1 0-3.11l6.7-6.7A2.6 2.6 0 0 1 10.9 2.6Z"/>',
-    '<circle cx="16.4" cy="7.6" r="2.1" class="ic-ink"/>',
-  ].join(''),
-
-  // ── 收入分类 ──
-  salary: [
-    // 钱包 + 硬币
-    '<path class="ic-ink" d="M4.6 3.9h12.2a2.4 2.4 0 0 1 2.4 2.4v2.1H4.6Z"/>',
-    '<rect x="1.9" y="7.2" width="20.2" height="14.2" rx="3.4" class="ic-peach"/>',
-    '<path class="ic-ink" d="M16.2 11.6h5.9a1.4 1.4 0 0 1 1.4 1.4v2.6a1.4 1.4 0 0 1-1.4 1.4h-5.9a2.7 2.7 0 0 1 0-5.4Z"/>',
-    '<circle cx="17.6" cy="14.3" r="1.25" class="ic-butter"/>',
-  ].join(''),
-  bonus: [
-    // 闪光
-    '<path class="ic-butter" d="M10.4 2.6a1.15 1.15 0 0 1 2.2 0l1.62 4.72a1.15 1.15 0 0 0 .72.72l4.72 1.62a1.15 1.15 0 0 1 0 2.2l-4.72 1.62a1.15 1.15 0 0 0-.72.72l-1.62 4.72a1.15 1.15 0 0 1-2.2 0L8.78 14.2a1.15 1.15 0 0 0-.72-.72L3.34 11.86a1.15 1.15 0 0 1 0-2.2l4.72-1.62a1.15 1.15 0 0 0 .72-.72Z"/>',
-    '<path class="ic-mint" d="M18.5 15.4a.85.85 0 0 1 1.6 0l.5 1.5 1.5.5a.85.85 0 0 1 0 1.6l-1.5.5-.5 1.5a.85.85 0 0 1-1.6 0l-.5-1.5-1.5-.5a.85.85 0 0 1 0-1.6l1.5-.5Z"/>',
-  ].join(''),
-  redpacket: [
-    // 红包
-    '<rect x="4.6" y="2.4" width="14.8" height="19.2" rx="3" class="ic-coral"/>',
-    '<path class="ic-ink" d="M4.6 5.4a3 3 0 0 1 3-3h8.8a3 3 0 0 1 3 3v.6c-2.9 2.8-5.36 4.2-7.4 4.2S8.5 8.8 5.6 6Z"/>',
-    '<circle cx="12" cy="14.6" r="3.1" class="ic-butter"/>',
-    '<circle cx="12" cy="14.6" r="1.2" class="ic-ink"/>',
-  ].join(''),
-
-  // ── 功能图标（界面构件，保持单色描边）──
-  calendar: [
-    '<rect x="2.6" y="4.6" width="18.8" height="17" rx="3.4" class="ic-peach"/>',
-    '<path class="ic-ink" d="M2.6 8a3.4 3.4 0 0 1 3.4-3.4h12a3.4 3.4 0 0 1 3.4 3.4v2.1H2.6Z"/>',
-    '<rect x="6.7" y="1.6" width="2.8" height="5.4" rx="1.4" class="ic-ink"/>',
-    '<rect x="14.5" y="1.6" width="2.8" height="5.4" rx="1.4" class="ic-ink"/>',
-    '<circle cx="12" cy="15.6" r="2.2" class="ic-mint"/>',
-  ].join(''),
-  backspace: [
-    '<path class="ic-peach" d="M9.1 3.9h10.3a3.4 3.4 0 0 1 3.4 3.4v9.4a3.4 3.4 0 0 1-3.4 3.4H9.1a2.4 2.4 0 0 1-1.77-.78l-5.2-5.7a2.4 2.4 0 0 1 0-3.24l5.2-5.7A2.4 2.4 0 0 1 9.1 3.9Z"/>',
-    '<path class="ic-ink" d="M11.9 8.5a1.3 1.3 0 0 1 1.84 0L15.6 10.36l1.86-1.86a1.3 1.3 0 0 1 1.84 1.84L17.44 12.2l1.86 1.86a1.3 1.3 0 0 1-1.84 1.84L15.6 14.04l-1.86 1.86a1.3 1.3 0 0 1-1.84-1.84l1.86-1.86-1.86-1.86a1.3 1.3 0 0 1 0-1.84Z"/>',
-  ].join(''),
-  chevronLeft:
-    '<path class="ic-stroke" d="M14.8 5.4 8.2 12l6.6 6.6"/>',
-  chevronRight:
-    '<path class="ic-stroke" d="M9.2 5.4 15.8 12l-6.6 6.6"/>',
-  close: '<path class="ic-stroke" d="M6.4 6.4l11.2 11.2M17.6 6.4 6.4 17.6"/>',
+  "food": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 11h18c-.6 6-3.7 8-9 8s-8.4-2-9-8Z\" class=\"ic-butter\"/><path d=\"M7 21h10M8 7c-2-2 2-3 0-5M13 7c-2-2 2-3 0-5M18 7c-2-2 2-3 0-5\" fill=\"none\"/></g>",
+  "coffee": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 7h11v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z\" class=\"ic-peach\"/><path d=\"M16 8h2a3 3 0 0 1 0 6h-2M3 22h16M9 3v1M13 2v2\" fill=\"none\"/></g>",
+  "transit": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"3\" width=\"14\" height=\"16\" rx=\"4\" class=\"ic-mint\"/><path d=\"M5 11h14M9 6h6M7 19v2M17 19v2\" fill=\"none\"/><circle cx=\"8.5\" cy=\"15\" r=\".8\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"15.5\" cy=\"15\" r=\".8\" fill=\"currentColor\" stroke=\"none\"/></g>",
+  "shopping": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 8h14l1 12H4L5 8Z\" class=\"ic-lavender\"/><path d=\"M8.5 9V6a3.5 3.5 0 0 1 7 0v3M9 14c1.8 1.5 4.2 1.5 6 0\" fill=\"none\"/></g>",
+  "home": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m4 10 8-7 8 7v10H4V10Z\" class=\"ic-peach\"/><path d=\"m2 11 10-9 10 9M10 20v-6h4v6\" fill=\"none\"/></g>",
+  "health": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"5\" class=\"ic-mint\"/><path d=\"M8 5V3h8v2M12 9v8M8 13h8\" fill=\"none\"/></g>",
+  "fun": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 7h10c3 0 4 3 4 6v3c0 3-3 4-5 1l-1-1H9l-1 1c-2 3-5 2-5-1v-3c0-3 1-6 4-6Z\" class=\"ic-lavender\"/><path d=\"M7.5 10v5M5 12.5h5\" fill=\"none\"/><circle cx=\"16\" cy=\"11\" r=\".8\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"18\" cy=\"14\" r=\".8\" fill=\"currentColor\" stroke=\"none\"/></g>",
+  "pet": "<g stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"ic-butter\"><path d=\"M6 17c0-2 1.6-3 3-5 1.5-2 4.5-2 6 0 1.4 2 3 3 3 5s-2.5 3-6 1.8C8.5 20 6 19 6 17Z\"/><ellipse cx=\"5\" cy=\"9\" rx=\"2\" ry=\"2.5\" transform=\"rotate(-24 5 9)\"/><ellipse cx=\"10\" cy=\"5\" rx=\"2\" ry=\"2.5\"/><ellipse cx=\"15\" cy=\"5.5\" rx=\"2\" ry=\"2.5\"/><ellipse cx=\"19.5\" cy=\"10\" rx=\"1.8\" ry=\"2.4\" transform=\"rotate(24 19.5 10)\"/></g>",
+  "salary": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 7V5a2 2 0 0 1 2-2h11v4\" fill=\"none\"/><rect x=\"3\" y=\"7\" width=\"18\" height=\"14\" rx=\"4\" class=\"ic-mint\"/><path d=\"M21 11h-5a3 3 0 0 0 0 6h5\" fill=\"none\"/><circle cx=\"16.5\" cy=\"14\" r=\".8\" fill=\"currentColor\" stroke=\"none\"/></g>",
+  "receipt": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 3h14v19l-3-2-4 2-4-2-3 2V3Z\" class=\"ic-butter\"/><path d=\"M8.5 7h7M8.5 11h7M8.5 15h4\" fill=\"none\"/></g>",
+  "pending": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"4\" width=\"15\" height=\"13\" rx=\"3\" class=\"ic-peach\"/><path d=\"M7 8h7M7 12h4\" fill=\"none\"/><circle cx=\"17\" cy=\"17\" r=\"5\" class=\"ic-paper\"/><path d=\"M17 14v3l2 1\" fill=\"none\"/></g>",
+  "budget": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 3a9 9 0 1 0 11 11H10V3Z\" class=\"ic-mint\"/><path d=\"M14 2v8h8a9 9 0 0 0-8-8Z\" class=\"ic-mint\"/></g>",
+  "dog": PUPPY_ICON,
+  "plus": "<path d=\"M12 5v14M5 12h14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>",
+  "arrow": "<path d=\"M5 12h14m-5-5 5 5-5 5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>",
+  "calendar": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"><rect x=\"4\" y=\"5\" width=\"16\" height=\"16\" rx=\"4\"/><path d=\"M8 3v5M16 3v5M4 10h16M8 14h2M14 14h2\"/></g>",
+  "backspace": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"><path d=\"M9 5h11v14H9l-7-7 7-7Z\"/><path d=\"m11 9 6 6M17 9l-6 6\"/></g>",
+  "chevron": "<path d=\"m9 6 6 6-6 6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>",
+  "record": "<path d=\"M12 5v14M5 12h14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>",
+  "list": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 3h14v19l-3-2-4 2-4-2-3 2V3Z\" class=\"ic-butter\"/><path d=\"M8.5 7h7M8.5 11h7M8.5 15h4\" fill=\"none\"/></g>",
+  "profile": PUPPY_ICON,
+  "study": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 6C8 3 4 3 2 4v15c3-1 6-1 10 2 4-3 7-3 10-2V4c-2-1-6-1-10 2Z\" class=\"ic-lavender\"/><path d=\"M12 6v15M5 8l4 1M5 12l4 1M15 9l4-1M15 13l4-1\" fill=\"none\"/></g>",
+  "social": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2\" class=\"ic-peach\"/><rect x=\"3\" y=\"7\" width=\"18\" height=\"4\" rx=\"1.5\" class=\"ic-peach\"/><path d=\"M12 7v14M12 7C5 7 5 2 8 2c3 0 4 5 4 5s1-5 4-5c3 0 3 5-4 5Z\" fill=\"none\"/></g>",
+  "other": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 4h9l10 10-8 8L3 11V4Z\" class=\"ic-lavender\"/><circle cx=\"7.5\" cy=\"8\" r=\"1\" fill=\"currentColor\" stroke=\"none\"/></g>",
+  "bonus": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m11 2 2.8 6.2L20 11l-6.2 2.8L11 20l-2.8-6.2L2 11l6.2-2.8L11 2Z\" class=\"ic-butter\"/><path d=\"M19 17v5M16.5 19.5h5\" fill=\"none\"/></g>",
+  "redpacket": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"3\" class=\"ic-peach\"/><path d=\"m5 6 7 4 7-4\" fill=\"none\"/><circle cx=\"12\" cy=\"15\" r=\"3\" class=\"ic-butter\"/></g>",
+  "chevronLeft": "<path class=\"ic-stroke\" d=\"m15 6-6 6 6 6\"/>",
+  "chevronRight": "<path d=\"m9 6 6 6-6 6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>",
+  "close": "<path class=\"ic-stroke\" d=\"m6 6 12 12M18 6 6 18\"/>",
+  "search": "<path class=\"ic-stroke\" d=\"M16.5 16.5 21 21\"/><circle class=\"ic-stroke\" cx=\"10.5\" cy=\"10.5\" r=\"6.5\"/>",
+  "filter": "<path class=\"ic-stroke\" d=\"M4 7h16M4 17h16\"/><g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"9\" cy=\"7\" r=\"2.5\" class=\"ic-paper\"/><circle cx=\"15\" cy=\"17\" r=\"2.5\" class=\"ic-paper\"/></g>",
+  "export": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 10v10h14V10\" class=\"ic-mint\"/><path d=\"M12 3v11M8 7l4-4 4 4\" fill=\"none\"/></g>",
+  "import": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 13v7h14v-7\" class=\"ic-lavender\"/><path d=\"M12 3v12m-4-4 4 4 4-4\" fill=\"none\"/></g>",
+  "bell": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 10a6 6 0 0 1 12 0v5l2 3H4l2-3v-5Z\" class=\"ic-butter\"/><path d=\"M10 21h4M12 2v2\" fill=\"none\"/></g>",
+  "replace": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"4\" class=\"ic-peach\"/><path d=\"M7 9h10l-2-2M17 15H7l2 2\" fill=\"none\"/></g>",
+  "check": "<path class=\"ic-stroke\" d=\"m5 12 4 4L19 6\"/>",
+  "warning": "<g stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m12 3 10 18H2L12 3Z\" class=\"ic-butter\"/><path d=\"M12 9v5M12 17v.2\" fill=\"none\"/></g>"
 };
 
-/** 图标配色，供预览脚本注入内联样式（浏览器里走 global.css 的 .ic-* 类） */
 export const ICON_COLORS = {
-  'ic-ink': '#4A4440',
-  'ic-peach': '#FFC0A4',
-  'ic-mint': '#5FD3A8',
-  'ic-butter': '#FFD37E',
-  'ic-coral': '#FF8E77',
-  'ic-paper': '#FFFAF4',
+  "ic-ink": "#414139",
+  "ic-peach": "#e8d2cb",
+  "ic-mint": "#ccd7c0",
+  "ic-butter": "#e8c575",
+  "ic-coral": "#d5a99f",
+  "ic-lavender": "#dcd5e7",
+  "ic-paper": "#fffefa"
 };

@@ -1,12 +1,14 @@
 .body {
-  padding: 4px 18px calc(28px + var(--safe-b));
+
+  padding: 6px var(--page-gutter) calc(28px + var(--safe-b));
 }
 
 .intro {
   font-size: 14px;
-  line-height: 1.75;
   color: var(--ink-2);
   margin: 0 0 18px;
+
+  line-height: 1.9;
 }
 
 .steps {
@@ -21,8 +23,9 @@
 .step {
   display: flex;
   gap: 11px;
-  font-size: 14px;
-  line-height: 1.6;
+
+  line-height: 1.8;
+  font-size: 13px;
 }
 
 .stepNum {
@@ -33,11 +36,13 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--r-full);
-  background: var(--brand-soft);
-  color: var(--brand-ink);
   font-size: 12px;
-  font-weight: 800;
   margin-top: 1px;
+
+  font-family: var(--font-number);
+  background: var(--sage);
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .copyBox {
@@ -47,8 +52,9 @@
   margin: 18px 0;
   padding: 12px 12px 12px 16px;
   border-radius: var(--r-md);
-  background: var(--surface);
-  border: 1.5px solid var(--border);
+
+  background: var(--lavender);
+  border: none;
 }
 
 .copyText {
@@ -60,20 +66,22 @@
 .copyBtn {
   flex-shrink: 0;
   padding: 7px 16px;
-  border-radius: var(--r-full);
   background: var(--brand);
-  color: #fff;
-  font-weight: 700;
+  color: var(--on-brand);
+  font-weight: 600;
   font-size: 13px;
+
+  border-radius: 12px;
 }
 
 .warning {
   padding: 13px 15px;
   border-radius: var(--r-md);
-  background: color-mix(in srgb, var(--danger) 10%, var(--surface));
-  border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent);
   font-size: 13px;
-  line-height: 1.7;
+
+  background: var(--brand-soft);
+  border: none;
+  line-height: 1.9;
 }
 
 .verify {

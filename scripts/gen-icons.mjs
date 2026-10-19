@@ -6,10 +6,11 @@
  *
  * 运行：npm run icons
  */
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
 import { puppySvg } from './icon.mjs';
+import { puppyStandalone } from '../src/ui/puppyArtwork.mjs';
 
 const publicDir = fileURLToPath(new URL('../public/', import.meta.url));
 const out = (name) => `${publicDir}${name}`;
@@ -46,3 +47,16 @@ for (const { name, size, scale } of targets) {
 
 await writeFile(out('favicon.svg'), puppySvg(1));
 console.log('✓ favicon.svg');
+
+// iOS 工程存在时沿用同一确认图形，避免安装后出现 Capacitor 默认图标。
+const iosAssets = new URL('../ios/App/App/Assets.xcassets/', import.meta.url);
+const hasIOS = await access(iosAssets).then(() => true, () => false);
+if (hasIOS) {
+  const render = (svg, size) => new Resvg(svg, { fitTo: { mode: 'width', value: size } }).render().asPng();
+  await writeFile(new URL('AppIcon.appiconset/AppIcon-512@2x.png', iosAssets), render(puppySvg(1), 1024));
+  const splash = puppyStandalone({ background: '#F5F3EE', scale: .12 });
+  for (const name of ['splash-2732x2732.png', 'splash-2732x2732-1.png', 'splash-2732x2732-2.png']) {
+    await writeFile(new URL(`Splash.imageset/${name}`, iosAssets), render(splash, 2732));
+  }
+  console.log('✓ iOS App 图标和启动图');
+}

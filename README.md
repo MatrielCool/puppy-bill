@@ -1,11 +1,20 @@
 # 🐶 小狗账单
 
-一只小狗帮你记账。装在 iPhone 主屏、完全离线、数据只存在你自己手机上的记账 PWA。
+一只小狗帮你记账。现有 React PWA，正在通过 Capacitor 推进 iOS App；本地通知验证版已接入。
 
-## 为什么是 PWA 而不是原生 app
+## iOS 本地通知验证版
 
-在 Windows 上开发 + 免费 Apple ID 的组合下，无法把开发版装到 iPhone（需要 Mac 本地编译或 $99 开发者账号）。
-Expo Go 虽然免费，但要求电脑开着 dev server、手机连同一 WiFi —— 而记账恰恰发生在人在外面花钱的时候。
+Mac 安装、通知行为和真机验收步骤见 [IOS.md](IOS.md)。日常开发仍可在 Windows 完成，Xcode 编译、签名和 iPhone 验收在 Mac 上进行。账本仍采用现有 IndexedDB，尚未迁移 SQLite。
+
+当前 iOS 验证分支为 `codex/ios-local-notifications`。从 GitHub 获取该分支后按 IOS.md 安装；仅克隆默认的 `main` 不包含本阶段代码。开发分支推送会运行自动检查，暂不发布手机安装包。
+
+## 接续开发
+
+新对话先读 [项目交接文档](HANDOFF.md)，了解已完成的视觉改版、用户确认的小狗版本、当前代码状态和后续计划。设计细则见 [柔彩日记设计说明](design/soft-journal/README.md)。本文件下方保留早期技术说明；涉及平台政策、费用和安装限制的表述，在确定正式 App 路线时应重新核实。
+
+## 早期 PWA 选型记录（历史背景）
+
+项目早期以 Windows 上开发和网页安装为主，因此先选择 PWA。现在用户已有 Mac 与 iPhone，已确认先做 Capacitor 自用验证版；当前开发和安装路径以 IOS.md 为准。
 
 iOS 16.4+ 的主屏 Web App 有独立图标、全屏运行、完全离线、支持角标，零成本。
 关键前提已核实：**Safari 的「7 天清除脚本可写存储」不适用于添加到主屏的 Web App**
@@ -32,6 +41,10 @@ npm run preview   # http://localhost:4173/puppy-bill/
 推送到 `main` 即自动部署到 GitHub Pages（见 `.github/workflows/deploy.yml`）。
 仓库 Settings → Pages → Source 需设为 **GitHub Actions**。
 
+`.github/workflows/checks.yml` 在 `main`、`codex/**` 分支推送和面向 `main` 的 PR 上执行 lint、测试、网页构建及 iOS 资源同步；Pages 部署本身也要求 lint 和测试通过。iOS 资源同步不等于 Xcode 编译、签名或真机通知验收。
+
+iPhone 自动更新的后续路径是 Xcode Cloud → TestFlight，待首次 Mac / iPhone 验收和 Apple 账号配置后接入。更新 GitHub Pages 不会更新已安装的原生 App。
+
 ### ⚠️ base 路径：改仓库名时必须同步
 
 GitHub Pages 项目页服务于 `https://<user>.github.io/<repo>/` 而非域名根。
@@ -42,7 +55,7 @@ GitHub Pages 项目页服务于 `https://<user>.github.io/<repo>/` 而非域名�
 2. manifest 的 `start_url` 和 `scope`（vite-plugin-pwa **不会**从 `base` 推导）
 3. `workbox.navigateFallback`
 
-`index.html` 里的 `apple-touch-icon` 和 `favicon` 链接也是硬编码绝对路径，同样要改。
+`index.html` 里的图标链接通过 `%BASE_URL%` 跟随所选构建模式，原生模式使用根路径。
 
 验证方法：构建后检查 `dist/` 里每个 URL 都带 `/<repo>/` 前缀。
 
@@ -65,7 +78,7 @@ GitHub Pages 项目页服务于 `https://<user>.github.io/<repo>/` 而非域名�
 
 | 选择 | 理由 |
 |---|---|
-| 自写 40 行哈希路由，不用 react-router | GH Pages 项目页深链 404，`404.html` hack 又与 SW 的 navigateFallback 冲突。且只有 4 个标签页、无嵌套路由，用不上路由库。顺带避开了 react-router 的 RSC CSRF 公告。 |
+| 自写 40 行哈希路由，不用 react-router | GH Pages 项目页深链 404，`404.html` hack 又与 SW 的 navigateFallback 冲突。且只有 5 个标签页、无嵌套路由，用不上路由库。顺带避开了 react-router 的 RSC CSRF 公告。 |
 | `@resvg/resvg-wasm` 生成图标，不用 sharp | 纯 WASM，无原生二进制、无 npm 安装脚本，Windows 与 CI 行为一致。sharp 被 `@vite-pwa/assets-generator` 锁在有 libvips CVE 的旧版本上。 |
 | 金额存整数分 | 永不用浮点做钱的运算。 |
 | 冗余 `dateKey` / `monthKey` | 月/日视图和预算汇总变成单索引等值查找；手机跨时区时数据仍稳定。 |

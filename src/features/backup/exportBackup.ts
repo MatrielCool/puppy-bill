@@ -5,11 +5,12 @@ import { FORMAT_VERSION, type BackupFile } from './backupSchema';
 
 /** 组装完整备份（含软删除的记录 —— 它们是撤销和安全合并的依据） */
 export async function buildBackup(): Promise<BackupFile> {
-  const [transactions, categories, budgets, settings] = await Promise.all([
+  const [transactions, categories, budgets, settings, receivables] = await Promise.all([
     db.transactions.toArray(),
     db.categories.toArray(),
     db.budgets.toArray(),
     db.settings.toArray(),
+    db.receivables.toArray(),
   ]);
 
   return {
@@ -21,8 +22,9 @@ export async function buildBackup(): Promise<BackupFile> {
       transactions: transactions.length,
       categories: categories.length,
       budgets: budgets.length,
+      receivables: receivables.length,
     },
-    data: { transactions, categories, budgets, settings },
+    data: { transactions, categories, budgets, settings, receivables },
   };
 }
 

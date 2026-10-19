@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom';
+import { Icon } from '../../ui/Icon';
 import clsx from 'clsx';
 import sheetStyles from '../list/EditSheet.module.css';
 import styles from './ReminderGuide.module.css';
@@ -63,7 +64,7 @@ export function ReminderGuide({ onClose, onCopy }: { onClose: () => void; onCopy
           </div>
 
           <div className={styles.warning}>
-            <b>⚠️ 千万不要添加「打开 URL」动作。</b>
+            <b><Icon name="warning" size={16} /> 千万不要添加「打开 URL」动作。</b>
             <br />
             那会用 Safari 打开小狗账单，而 Safari 和主屏图标的数据是<b>分开存储</b>的，
             你会看到一个空账本。收到提醒后请直接点主屏幕上的小狗图标。

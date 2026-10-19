@@ -26,8 +26,8 @@ const rows = Math.ceil(names.length / COLS);
 const strokeBase = 'fill:none;stroke-linecap:round;stroke-linejoin:round';
 const css = [
   ...Object.entries(ICON_COLORS).map(([cls, color]) => `.${cls}{fill:${color}}`),
-  `.ic-stroke{${strokeBase};stroke:${ICON_COLORS['ic-ink']};stroke-width:2.2}`,
-  `.ic-ink-stroke{${strokeBase};stroke:${ICON_COLORS['ic-ink']};stroke-width:2.4}`,
+  `.ic-stroke{${strokeBase};stroke:${ICON_COLORS['ic-ink']};stroke-width:1.6}`,
+  `.ic-ink-stroke{${strokeBase};stroke:${ICON_COLORS['ic-ink']};stroke-width:1.6}`,
 ].join('');
 
 const cells = names
@@ -44,9 +44,9 @@ const cells = names
   })
   .join('');
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${COLS * CELL}" height="${rows * CELL}">
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${COLS * CELL}" height="${rows * CELL}" color="#414139">
   <style>${css}</style>
-  <rect width="100%" height="100%" fill="#FFF8F0"/>
+  <rect width="100%" height="100%" fill="#F5F3EE"/>
   ${cells}
 </svg>`;
 

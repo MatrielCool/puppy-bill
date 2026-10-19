@@ -11,6 +11,8 @@ import type { ToastData } from '../../ui/Toast';
 import { Icon, type IconName } from '../../ui/Icon';
 import { EditSheet } from './EditSheet';
 import styles from './ListScreen.module.css';
+import { PageHeading } from '../../ui/PageHeading';
+import { PuppyScene } from '../../ui/PuppyScene';
 
 export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void }) {
   const [monthKey, setMonthKey] = useState(currentMonthKey);
@@ -60,8 +62,9 @@ export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void })
   };
 
   return (
-    <div>
+    <div className={styles.screen}>
       <div className={styles.header}>
+        <PageHeading title="我的小账本" eyebrow="LITTLE THINGS, WELL KEPT" />
         <div className={styles.monthNav}>
           <button
             className={styles.navBtn}
@@ -83,6 +86,7 @@ export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void })
 
         <div className={styles.summaryCard}>
           <div className={styles.summaryCell}>
+            <PuppyScene className={styles.garden} />
             <span className={styles.summaryLabel}>支出</span>
             <span className={styles.summaryValue}>{formatCNYGrouped(expense)}</span>
           </div>
@@ -101,6 +105,7 @@ export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void })
         <div className={styles.searchRow}>
           <input
             className={styles.searchInput}
+            aria-label="搜索备注或分类"
             placeholder="搜索备注或分类"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
@@ -110,6 +115,7 @@ export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void })
             className={clsx(styles.filterToggle, selectedCats.size > 0 && styles.filterToggleOn)}
             onClick={() => setFilterOpen((v) => !v)}
           >
+            <Icon name="filter" size={18} />
             筛选{selectedCats.size > 0 ? ` ${selectedCats.size}` : ''}
           </button>
         </div>
@@ -141,11 +147,7 @@ export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void })
 
       {filtered.length === 0 && (
         <div className={styles.empty}>
-          <img
-            className={styles.emptyPuppy}
-            src={`${import.meta.env.BASE_URL}pwa-192x192.png`}
-            alt=""
-          />
+          <Icon name="list" className={styles.emptyPuppy} size={54} />
           <p className={styles.emptyText}>
             {isFiltering
               ? '没有符合条件的账目，换个词试试'
@@ -157,7 +159,7 @@ export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void })
       )}
 
       {groupByDay(filtered).map(([dateKey, dayRows]) => (
-        <div key={dateKey}>
+        <section className={styles.dayGroup} key={dateKey}>
           <div className={styles.dayHeader}>
             <span>{formatDayHeader(dateKey)}</span>
             <span>{formatCNY(sum(dayRows, 'expense'))}</span>
@@ -170,7 +172,7 @@ export function ListScreen({ onToast }: { onToast: (toast: ToastData) => void })
               onClick={() => setEditing(row)}
             />
           ))}
-        </div>
+        </section>
       ))}
 
       {editing && (

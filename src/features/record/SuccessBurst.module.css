@@ -37,8 +37,8 @@
   position: absolute;
   transform: translate(58px, -52px);
   background: var(--brand);
-  color: #fff;
-  font-weight: 800;
+  color: var(--on-brand);
+  font-weight: 600;
   font-size: 18px;
   padding: 5px 14px;
   border-radius: var(--r-full);
