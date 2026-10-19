@@ -9,10 +9,10 @@
 用户已确认按「先上传开发分支 → Mac / iPhone 首次验收 → 再接入 Xcode Cloud / TestFlight」推进，并要求本次进展同步到本文。
 
 - 仓库：[MatrielCool/puppy-bill](https://github.com/MatrielCool/puppy-bill)，当前为公开仓库。远端 `main` 核对为 `8189a1c`；推送 `main` 会触发 Pages 发布。
-- 已创建开发分支 `codex/ios-local-notifications`，正在整理跨多轮成果并上传。范围包括待入账与 schema 3、柔彩日记、确认圆脸小狗、Capacitor iOS 工程、本地通知和文档；不要把整个差异归因于这次整理。
-- 新增 `.github/workflows/checks.yml`：`main`、`codex/**` 推送及面向 `main` 的 PR 自动执行 lint、测试、图标生成、网页构建和 `npm run ios:sync`。运行于 Ubuntu，只验证代码及 iOS 资源，不做 Xcode 编译或签名。远端运行结果待推送后核对。
-- Pages 工作流增加 lint/test 门槛。当前只准备上传开发分支，不合并 `main`、不发布网站或手机安装包。
-- IOS.md 已改为从 GitHub 开发分支获取代码，并补充 Mac 后续更新命令、覆盖安装和 Xcode Cloud / TestFlight 接入条件。此前「只能复制完整工作区」的说明将在开发分支推送后不再适用。
+- 已提交并推送开发分支 [`codex/ios-local-notifications`](https://github.com/MatrielCool/puppy-bill/tree/codex/ios-local-notifications)，阶段代码提交为 `5e3af9a`（`feat: checkpoint journal design, receivables and iOS reminders`）。包含 138 个文件，范围包括待入账与 schema 3、柔彩日记、确认圆脸小狗、Capacitor iOS 工程、本地通知和文档；不要把整个差异归因于这次整理。
+- 新增 `.github/workflows/checks.yml`：`main`、`codex/**` 推送及面向 `main` 的 PR 自动执行 lint、测试、图标生成、网页构建和 `npm run ios:sync`。运行于 Ubuntu，只验证代码及 iOS 资源，不做 Xcode 编译或签名。首次推送已触发检查；2026-10-20 00:33（北京时间）核对时仍在等 GitHub 运行机，尚无云端成功结论。最终文档提交会再触发检查并取消同分支尚未完成的旧任务，以[分支最新 Actions 结果](https://github.com/MatrielCool/puppy-bill/actions?query=branch%3Acodex%2Fios-local-notifications)为准。
+- Pages 工作流增加 lint/test 门槛。本轮只推送开发分支，已核对远端 `main` 仍为 `8189a1c`；没有合并、创建 PR 或触发 Pages 发布，也未发布手机安装包。
+- IOS.md 已改为从 GitHub 开发分支获取代码，并补充 Mac 后续更新命令、覆盖安装和 Xcode Cloud / TestFlight 接入条件。此前「只能复制完整工作区」的说明已不再适用；直接克隆开发分支即可。
 - 本轮上传前复核：lint、9 个测试文件 / 99 项测试、网页构建及 iOS 资源同步均通过。
 - 尚未完成：Mac Xcode 编译、签名、iPhone 真机验收、共享 Scheme、Apple 账号及 App Store Connect 配置、Xcode Cloud / TestFlight 分发。未开通或购买 Apple 会员。
 - 后续日常更新路径：修改功能/设计 → 测试与 GitHub 开发分支 → Mac 拉取并安装；真机稳定后再配置云端构建和 TestFlight 自动更新。GitHub 源码备份与手机账本备份是两回事。
@@ -188,7 +188,7 @@ npm run preview -- --host 127.0.0.1 --port 4173 --strictPort
 
 ### 整理交付和发布
 
-本轮已开始将可追踪的提交和自动检查纳入开发分支交付。首次 Mac / iPhone 验收通过后，再根据发布指令合并到 `main`；当前没有合并或上线的授权。Xcode Cloud / TestFlight 的后续配置需要用户自己的 Apple 账号和 Mac，详见 IOS.md。若继续做品牌细节，可评估散步场景里的小狗与确认头像的一致性；这不是已确认的新任务，也不要借此再次改动定稿头像。
+本轮已将可追踪的提交和自动检查纳入开发分支交付。首次 Mac / iPhone 验收通过后，再根据发布指令合并到 `main`；当前没有合并或上线的授权。Xcode Cloud / TestFlight 的后续配置需要用户自己的 Apple 账号和 Mac，详见 IOS.md。若继续做品牌细节，可评估散步场景里的小狗与确认头像的一致性；这不是已确认的新任务，也不要借此再次改动定稿头像。
 
 ## 可直接粘贴到新对话
 
