@@ -1,20 +1,28 @@
 # 小狗账单项目交接
 
-更新日期：2026-10-20。项目目录：`D:\ClaudeWorkSpace\小狗账单`。
+更新日期：2026-10-21。项目目录：`D:\ClaudeWorkSpace\小狗账单`。
 
-项目保留 React PWA，已新增 Capacitor 8 iOS 工程和本地通知验证版。用户确认「先自己使用，稳定后再考虑上架」，已有 Mac 和 iPhone，并已授权接入本地通知。通知设置、每日提醒、待入账提醒、取消/重排和点击导航已实现；尚未在 Mac 上完成 Xcode 编译、签名或 iPhone 真机验收。操作和行为说明见 [IOS.md](IOS.md)。视觉仍为此前确认的柔彩日记与圆脸小狗。
+项目保留 React PWA，已新增 Capacitor 8 iOS 工程和本地通知验证版。用户确认「先自己使用，稳定后再考虑上架」，已有 Mac 和 iPhone，并已授权接入本地通知。通知设置、每日提醒、待入账提醒、取消/重排和点击导航已实现；用户已反馈完成 Mac 安装指南第 4 步的自动签名和 Team 选择，尚未确认 Xcode 编译、签名安装或 iPhone 真机验收通过。操作和行为说明见 [IOS.md](IOS.md)。视觉仍为此前确认的柔彩日记与圆脸小狗。
 
-## 本轮接续：GitHub 交付与更新流程
+## 本轮接续：Mac / iPhone 安装操作指南
+
+- 用户第一次使用 Xcode，已反馈完成 IOS.md「在 Mac 上安装」第 4 步。接下来从[第 5 步](IOS.md#step-5)继续，不必重新克隆或重做前四步。
+- IOS.md 已补齐逐步操作：两处 App 标识设置、连接与信任 iPhone、开启开发者模式、Run 安装、10 秒测试通知、每日与待入账提醒验证、离线/备份/覆盖更新，以及常见错误处理。每一阶段说明应看到的结果，按钮名称保留英文便于对照。
+- Windows 仓库仍使用占位标识 `com.puppybill.app`，文档中的 `com.matrielcool.puppybill` 仅为示例。用户 Mac 上最终采用的标识和 Team 尚未回传，不能猜测或覆盖。首次安装成功后应将实际工程配置整理进开发分支，保留标识和 Team，不提交签名证书或私钥。
+- 用户可直接在 Mac 浏览器查看[开发分支的 IOS.md](https://github.com/MatrielCool/puppy-bill/blob/codex/ios-local-notifications/IOS.md#step-5)。文档同时说明后续 `git pull --ff-only`、`npm ci`、`npm run ios:sync`、`npm run ios:open` 和 Run 覆盖安装；Mac 签名配置造成的本地改动必须保留，遇到 Git 冲突或分叉先处理，不能 reset/clean。
+- 本轮仅更新 IOS.md 与本文，没有改变 App 功能、视觉或原生工程配置。Xcode 构建、真机通知、原生文件导入导出和覆盖更新的数据保留仍待用户设备验证。
+
+## 上一阶段：GitHub 交付与更新流程
 
 用户已确认按「先上传开发分支 → Mac / iPhone 首次验收 → 再接入 Xcode Cloud / TestFlight」推进，并要求本次进展同步到本文。
 
 - 仓库：[MatrielCool/puppy-bill](https://github.com/MatrielCool/puppy-bill)，当前为公开仓库。远端 `main` 核对为 `8189a1c`；推送 `main` 会触发 Pages 发布。
 - 已提交并推送开发分支 [`codex/ios-local-notifications`](https://github.com/MatrielCool/puppy-bill/tree/codex/ios-local-notifications)，阶段代码提交为 `5e3af9a`（`feat: checkpoint journal design, receivables and iOS reminders`）。包含 138 个文件，范围包括待入账与 schema 3、柔彩日记、确认圆脸小狗、Capacitor iOS 工程、本地通知和文档；不要把整个差异归因于这次整理。
-- 新增 `.github/workflows/checks.yml`：`main`、`codex/**` 推送及面向 `main` 的 PR 自动执行 lint、测试、图标生成、网页构建和 `npm run ios:sync`。运行于 Ubuntu，只验证代码及 iOS 资源，不做 Xcode 编译或签名。首次推送已触发检查；2026-10-20 00:33（北京时间）核对时仍在等 GitHub 运行机，尚无云端成功结论。最终文档提交会再触发检查并取消同分支尚未完成的旧任务，以[分支最新 Actions 结果](https://github.com/MatrielCool/puppy-bill/actions?query=branch%3Acodex%2Fios-local-notifications)为准。
+- 新增 `.github/workflows/checks.yml`：`main`、`codex/**` 推送及面向 `main` 的 PR 自动执行 lint、测试、图标生成、网页构建和 `npm run ios:sync`。运行于 Ubuntu，只验证代码及 iOS 资源，不做 Xcode 编译或签名。2026-10-21 复核：`5e3af9a` 和随后交接文档提交 `4a38bc0` 的检查均已成功，后者见 [Actions 运行结果](https://github.com/MatrielCool/puppy-bill/actions/runs/39286499253)。后续文档推送会再次触发检查，以[分支最新 Actions 结果](https://github.com/MatrielCool/puppy-bill/actions?query=branch%3Acodex%2Fios-local-notifications)为准。
 - Pages 工作流增加 lint/test 门槛。本轮只推送开发分支，已核对远端 `main` 仍为 `8189a1c`；没有合并、创建 PR 或触发 Pages 发布，也未发布手机安装包。
 - IOS.md 已改为从 GitHub 开发分支获取代码，并补充 Mac 后续更新命令、覆盖安装和 Xcode Cloud / TestFlight 接入条件。此前「只能复制完整工作区」的说明已不再适用；直接克隆开发分支即可。
 - 本轮上传前复核：lint、9 个测试文件 / 99 项测试、网页构建及 iOS 资源同步均通过。
-- 尚未完成：Mac Xcode 编译、签名、iPhone 真机验收、共享 Scheme、Apple 账号及 App Store Connect 配置、Xcode Cloud / TestFlight 分发。未开通或购买 Apple 会员。
+- 尚未完成：Mac Xcode 编译及实际签名安装、iPhone 真机验收、云端构建用的共享 Scheme、App Store Connect 配置、Xcode Cloud / TestFlight 分发。用户已反馈完成 Xcode 中自动签名和 Team 选择；未确认开通或购买 Apple 会员。
 - 后续日常更新路径：修改功能/设计 → 测试与 GitHub 开发分支 → Mac 拉取并安装；真机稳定后再配置云端构建和 TestFlight 自动更新。GitHub 源码备份与手机账本备份是两回事。
 
 ## 上一阶段：iOS 本地通知
@@ -182,7 +190,7 @@ npm run preview -- --host 127.0.0.1 --port 4173 --strictPort
 
 ### 继续验证已选定的 App 路径
 
-用户已选定先自用、稳定后上架，使用已有 Mac / iPhone。Capacitor 工程和本地通知接入已落地；下一步在 Mac 获取 `codex/ios-local-notifications`，按 IOS.md 真机验收。不要重复询问已确认的发布目标或设备，也不要将 Windows 或 Ubuntu 的资源构建成功当作真机通过。
+用户已选定先自用、稳定后上架，使用已有 Mac / iPhone。Capacitor 工程和本地通知接入已落地；用户已完成 Mac 安装指南第 4 步，下一步按 IOS.md 第 5 步起继续安装和真机验收。不要重复询问已确认的发布目标或设备，也不要将 Windows 或 Ubuntu 的资源构建成功当作真机通过。
 
 无论最终选哪条路线，都要规划现有 IndexedDB 账本和 JSON 备份的迁移，不能以重写界面为代价丢失账目。根目录 README 保留了早期对费用、平台支持、安装和通知限制的判断，不应直接当作最新结论。
 
@@ -192,4 +200,4 @@ npm run preview -- --host 127.0.0.1 --port 4173 --strictPort
 
 ## 可直接粘贴到新对话
 
-> 继续这个项目，请先阅读根目录 HANDOFF.md、AGENTS.md 和 IOS.md，再检查现有代码状态。项目是小狗账单，开发分支为 codex/ios-local-notifications，保留柔彩日记与确认圆脸小狗；已接入 Capacitor iOS 工程与本地通知，99 项测试通过，并配置 GitHub 自动检查。用户已有 Mac/iPhone，下一步从开发分支获取代码，完成 Xcode 编译、签名和真机验收，然后再接入 Xcode Cloud / TestFlight。不要将 iOS 资源同步通过当作真机通过；保留账本和任何已有本地改动。
+> 继续这个项目，请先阅读根目录 HANDOFF.md、AGENTS.md 和 IOS.md，再检查现有代码状态。项目是小狗账单，开发分支为 codex/ios-local-notifications，保留柔彩日记与确认圆脸小狗；已接入 Capacitor iOS 工程与本地通知，99 项测试通过，GitHub 自动检查已通过。用户已有 Mac/iPhone，已反馈完成 IOS.md 的 Mac 安装第 4 步（自动签名和 Team 选择），下一步从第 5 步设置 App 标识继续，完成 Xcode 编译、安装和真机验收，然后再接入 Xcode Cloud / TestFlight。Windows 仓库仍是占位 App 标识，用户 Mac 上的实际标识和 Team 尚未回传。不要将 iOS 资源同步通过当作真机通过；保留账本和任何已有本地改动。
